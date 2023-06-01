@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package org.springframework.samples.petclinic.system;
+package org.springframework.samples.petclinic.common.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.samples.petclinic.common.controller.CrashController;
 
 /**
  * Test class for {@link CrashController}

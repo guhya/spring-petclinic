@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.core.style.ToStringCreator;
-import org.springframework.samples.petclinic.model.Person;
+import org.springframework.samples.petclinic.common.model.Person;
 import org.springframework.util.Assert;
 
 import jakarta.persistence.CascadeType;

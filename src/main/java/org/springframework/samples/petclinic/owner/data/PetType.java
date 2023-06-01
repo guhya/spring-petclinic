@@ -15,7 +15,7 @@
  */
 package org.springframework.samples.petclinic.owner.data;
 
-import org.springframework.samples.petclinic.model.NamedEntity;
+import org.springframework.samples.petclinic.common.model.NamedEntity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
