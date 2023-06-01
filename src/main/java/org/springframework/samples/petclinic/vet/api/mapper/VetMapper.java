@@ -3,7 +3,7 @@ package org.springframework.samples.petclinic.vet.api.mapper;
 import java.util.Collection;
 
 import org.mapstruct.Mapper;
-import org.springframework.samples.petclinic.vet.api.request.VetDto;
+import org.springframework.samples.petclinic.vet.api.dto.VetDto;
 import org.springframework.samples.petclinic.vet.data.Vet;
 
 /**

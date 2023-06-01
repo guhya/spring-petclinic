@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.owner.api.request;
+package org.springframework.samples.petclinic.owner.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;

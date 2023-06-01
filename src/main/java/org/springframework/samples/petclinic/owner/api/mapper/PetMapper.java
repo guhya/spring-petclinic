@@ -4,8 +4,8 @@ import java.util.Collection;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.springframework.samples.petclinic.owner.api.request.PetDto;
-import org.springframework.samples.petclinic.owner.api.request.PetTypeDto;
+import org.springframework.samples.petclinic.owner.api.dto.PetDto;
+import org.springframework.samples.petclinic.owner.api.dto.PetTypeDto;
 import org.springframework.samples.petclinic.owner.data.Pet;
 import org.springframework.samples.petclinic.owner.data.PetType;
 

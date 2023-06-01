@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.mapstruct.Mapper;
-import org.springframework.samples.petclinic.owner.api.request.OwnerDto;
+import org.springframework.samples.petclinic.owner.api.dto.OwnerDto;
 import org.springframework.samples.petclinic.owner.data.Owner;
 
 /**
