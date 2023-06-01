@@ -1,5 +1,6 @@
 package net.guhya.petclinic.module.owner.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
@@ -10,6 +11,7 @@ public class PetTypeDto {
 	private String name;
 
 	@JsonProperty("id")
+	@JsonIgnore
 	private Integer id;
 
 	public String getName() {

@@ -1,6 +1,6 @@
 package net.guhya.petclinic.module.owner.api.mapper;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -11,7 +11,7 @@ import net.guhya.petclinic.module.owner.data.Visit;
 /**
  * Map Visit & VisitDto using mapstruct
  */
-@Mapper(uses = PetMapper.class)
+@Mapper
 public interface VisitMapper {
     
 	Visit toVisit(VisitDto visitDto);
@@ -19,6 +19,6 @@ public interface VisitMapper {
     @Mapping(source = "pet.id", target = "petId")
     VisitDto toVisitDto(Visit visit);
 
-    Collection<VisitDto> toVisitsDto(Collection<Visit> visits);
+    List<VisitDto> toVisitsDto(List<Visit> visits);
 
 }

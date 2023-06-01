@@ -98,4 +98,19 @@ public class Visit extends BaseEntity {
         this.pet = pet;
     }
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Visit [date=");
+		builder.append(date);
+		builder.append(", description=");
+		builder.append(description);
+		builder.append(", pet=");
+		builder.append(pet.getId());
+		builder.append("]");
+		return builder.toString();
+	}
+    
+    
+
 }

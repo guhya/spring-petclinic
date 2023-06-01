@@ -15,9 +15,10 @@
  */
 package net.guhya.petclinic.module.owner.api;
 
-import java.util.Collection;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +35,8 @@ import net.guhya.petclinic.module.owner.service.OwnerService;
 @RestController
 class OwnerRestController {
 
+	private static final Logger logger = LoggerFactory.getLogger(OwnerRestController.class);
+	
     private final OwnerService ownerService;
     private final OwnerMapper ownerMapper;
     
@@ -47,12 +50,13 @@ class OwnerRestController {
 	
 	@GetMapping("/owner")
     public ResponseEntity<List<OwnerDto>> listOwners(String lastName) {
-		Collection<Owner> owners;
+		List<Owner> owners;
         if (lastName != null) {
             owners = ownerService.findByLastName(lastName);
         } else {
             owners = ownerService.findAll();
         }
+        
         List<OwnerDto> ownerListDto = ownerMapper.toOwnerDtoList(owners);
         
         return new ResponseEntity<>(ownerListDto, HttpStatus.OK);
@@ -61,6 +65,9 @@ class OwnerRestController {
 	@GetMapping("/owner/{ownerId}")
     public ResponseEntity<OwnerDto> getOwner(@PathVariable("ownerId") Integer ownerId) {
         Owner owner = ownerService.findById(ownerId);
+        
+        logger.debug("\n### Owner : {}", owner);
+        
         if (owner == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);        
         OwnerDto ownerDto = ownerMapper.toOwnerDto(owner);
         

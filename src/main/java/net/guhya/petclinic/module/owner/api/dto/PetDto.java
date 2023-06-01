@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
@@ -33,6 +34,7 @@ public class PetDto {
 
 	@JsonProperty("ownerId")
 	@NotEmpty
+	@JsonIgnore
 	private Integer ownerId;
 
 	@JsonProperty("visits")

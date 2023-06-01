@@ -103,4 +103,21 @@ public class Pet extends NamedEntity {
         visit.setPet(this);
     }
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Pet [birthDate=");
+		builder.append(birthDate);
+		builder.append(", type=");
+		builder.append(type);
+		builder.append(", owner=");
+		builder.append(owner.getId());
+		builder.append(", visits=");
+		builder.append(visits);
+		builder.append("]");
+		return builder.toString();
+	}
+    
+    
+
 }

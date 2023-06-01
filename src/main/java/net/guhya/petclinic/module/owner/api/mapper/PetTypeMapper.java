@@ -1,6 +1,5 @@
 package net.guhya.petclinic.module.owner.api.mapper;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.mapstruct.Mapper;
@@ -18,5 +17,5 @@ public interface PetTypeMapper {
 
     PetTypeDto toPetTypeDto(PetType petType);
 
-    List<PetTypeDto> toPetTypeDtos(Collection<PetType> petTypes);
+    List<PetTypeDto> toPetTypeDtos(List<PetType> petTypes);
 }

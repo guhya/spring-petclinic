@@ -15,7 +15,7 @@
  */
 package net.guhya.petclinic.module.owner.service;
 
-import java.util.List;
+import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -24,49 +24,50 @@ import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.guhya.petclinic.module.owner.data.Owner;
-import net.guhya.petclinic.module.owner.repository.OwnerRepository;
+import net.guhya.petclinic.module.owner.data.Pet;
+import net.guhya.petclinic.module.owner.data.PetType;
+import net.guhya.petclinic.module.owner.repository.PetRepository;
 
 @Service
-public class OwnerService {
+public class PetService {
 
-    private OwnerRepository ownerRepository;
+    private PetRepository petRepository;
 
     @Autowired
-    public OwnerService(OwnerRepository ownerRepository) {
-        this.ownerRepository = ownerRepository;
+    public PetService(PetRepository petRepository) {
+        this.petRepository = petRepository;
     }
 
 	@Transactional(readOnly = true)
-	public List<Owner> findAll() throws DataAccessException {
-		return ownerRepository.findAll();
+	public Collection<Pet> findAll() throws DataAccessException {
+		return petRepository.findAll();
 	}
 
 	@Transactional
-	public void delete(Owner owner) throws DataAccessException {
-		ownerRepository.delete(owner);
+	public void delete(Pet pet) throws DataAccessException {
+		petRepository.delete(pet);
 	}
 
 	@Transactional(readOnly = true)
-	public Owner findById(int id) throws DataAccessException {
-		Owner owner = null;
+	public Pet findById(int id) throws DataAccessException {
+		Pet pet = null;
 		try {
-			owner = ownerRepository.findById(id);
+			pet = petRepository.findById(id);
 		} catch (ObjectRetrievalFailureException|EmptyResultDataAccessException e) {
 			// just ignore not found exceptions for Jdbc/Jpa realization
 			return null;
 		}
-		return owner;
+		return pet;
 	}
 
 	@Transactional
-	public void saveOwner(Owner owner) throws DataAccessException {
-		ownerRepository.save(owner);
+	public void savePet(Pet pet) throws DataAccessException {
+		petRepository.save(pet);
 	}
 
 	@Transactional(readOnly = true)
-	public List<Owner> findByLastName(String lastName) throws DataAccessException {
-		return ownerRepository.findByLastName(lastName);
+	public Collection<PetType> findPetTypes() throws DataAccessException {
+		return petRepository.findPetTypes();
 	}
 
 }
