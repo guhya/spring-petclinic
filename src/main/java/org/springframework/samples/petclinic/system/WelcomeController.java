@@ -16,15 +16,26 @@
 
 package org.springframework.samples.petclinic.system;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 class WelcomeController {
 
 	@GetMapping("/")
 	public String welcome() {
-		return "welcome";
+		String welcome = "<pre>"
+				+ "                 _                 		<br>"
+				+ "                | |                		<br>"
+				+ "   ___ __ _ _ __| |__   ___  _ __  		<br>"
+				+ "  / __/ _` | '__| '_ \\ / _ \\| '_ \\ 	<br>"
+				+ " | (_| (_| | |  | |_) | (_) | | | | 		<br>"
+				+ "  \\___\\__,_|_|  |_.__/ \\___/|_| |_|	<br>"
+				+ "			by eWIDEPLUS"
+				+ "</pre>";
+	
+	
+		return welcome;
 	}
 
 }
