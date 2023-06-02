@@ -57,14 +57,12 @@ class OwnerRestController {
 	
 	@GetMapping("/owner")
     public ResponseEntity<List<OwnerDto>> listOwners(String lastName) {
-		List<Owner> owners;
+		List<OwnerDto> ownerListDto;
         if (lastName != null) {
-            owners = ownerService.findByLastName(lastName);
+        	ownerListDto = ownerService.findByLastName(lastName);
         } else {
-            owners = ownerService.findAll();
+        	ownerListDto = ownerService.findAll();
         }
-        
-        List<OwnerDto> ownerListDto = ownerMapper.toOwnerDtoList(owners);
         
         return new ResponseEntity<>(ownerListDto, HttpStatus.OK);
     }
@@ -86,16 +84,15 @@ class OwnerRestController {
 				String typeId = pet.getType();
 				pet.setType(typeMap.get(Integer.valueOf(typeId)));
 			}
-		}        
+		}
+		
         return new ResponseEntity<>(ownerListDto, HttpStatus.OK);
     }
 
 	@GetMapping("/owner/{ownerId}")
     public ResponseEntity<OwnerDto> getOwner(@PathVariable Integer ownerId) {
-        Owner owner = ownerService.findByOwnerId(ownerId);
-        if (owner == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);        
-        
-        OwnerDto ownerDto = ownerMapper.toOwnerDto(owner);
+		OwnerDto ownerDto = ownerService.findByOwnerId(ownerId);
+        if (ownerDto == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);        
         
         return new ResponseEntity<>(ownerDto, HttpStatus.OK);
     }
@@ -107,6 +104,7 @@ class OwnerRestController {
         Owner owner = ownerMapper.toOwner(ownerDto);
         ownerService.save(owner);
         OwnerDto savedDto = ownerMapper.toOwnerDto(owner);
+        
         return new ResponseEntity<>(savedDto, HttpStatus.CREATED);
     }
 
@@ -114,21 +112,24 @@ class OwnerRestController {
     public ResponseEntity<OwnerDto> updateOwner(@Valid @RequestBody OwnerDto ownerDto) {
 		if (ownerDto.getOwnerId() == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		
-		Owner existingOwner = ownerService.findByOwnerId(ownerDto.getOwnerId());
-		if (existingOwner == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		OwnerDto existingOwnerDto = ownerService.findByOwnerId(ownerDto.getOwnerId());
+		if (existingOwnerDto == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			
         Owner owner = ownerMapper.toOwner(ownerDto);
         ownerService.save(owner);
         OwnerDto savedDto = ownerMapper.toOwnerDto(owner);
+        
         return new ResponseEntity<>(savedDto, HttpStatus.OK);
     }
 	
 	@DeleteMapping("/owner/{ownerId}")
     public ResponseEntity<OwnerDto> deleteOwner(@PathVariable Integer ownerId) {
-		Owner existingOwner = ownerService.findByOwnerId(ownerId);
-		if (existingOwner == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		OwnerDto existingOwnerDto = ownerService.findByOwnerId(ownerId);
+		if (existingOwnerDto == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		
-		ownerService.delete(existingOwner);
+        Owner owner = ownerMapper.toOwner(existingOwnerDto);
+		ownerService.delete(owner);
+		
         return new ResponseEntity<>(HttpStatus.OK);
     }
 	

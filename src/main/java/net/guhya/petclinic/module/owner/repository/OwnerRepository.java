@@ -21,27 +21,41 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
+import net.guhya.petclinic.module.owner.api.dto.OwnerDto;
 import net.guhya.petclinic.module.owner.data.Owner;
 import net.guhya.petclinic.module.owner.data.PetType;
 
 public interface OwnerRepository extends Repository<Owner, Integer> {
 
-    @Query(nativeQuery = true,
-    		value = "SELECT * FROM owner WHERE last_name LIKE %:lastName% ORDER BY owner_id DESC")
-	List<Owner> findByLastName(String lastName) throws DataAccessException;
+    @Query(nativeQuery = false,
+    		value = "SELECT new net.guhya.petclinic.module.owner.api.dto.OwnerDto("
+      			  + "	a.firstName, a.lastName, a.address, a.city, a.telephone, a.ownerId "
+    			  + ") "
+    			  + "FROM Owner a "
+    			  + "WHERE a.lastName LIKE %:lastName% "
+    			  + "ORDER BY a.ownerId DESC")
+	List<OwnerDto> findByLastName(String lastName) throws DataAccessException;
 
-    @Query(nativeQuery = true,
-    		value = "SELECT * FROM owner WHERE owner_id = :id ORDER BY owner_id DESC")
-    Owner findByOwnerId(int id) throws DataAccessException;
+    @Query(nativeQuery = false,
+    		value = "SELECT new net.guhya.petclinic.module.owner.api.dto.OwnerDto("
+      			  + "	a.firstName, a.lastName, a.address, a.city, a.telephone, a.ownerId "
+    			  + ") "
+    			  + "FROM Owner a "
+    			  + "WHERE a.ownerId = :id ")
+    OwnerDto findByOwnerId(int id) throws DataAccessException;
 
-    @Query(nativeQuery = true,
-    		value = "SELECT * FROM owner ORDER BY owner_id DESC")
-    List<Owner> findAll() throws DataAccessException;
+    @Query(nativeQuery = false,
+    		value = "SELECT new net.guhya.petclinic.module.owner.api.dto.OwnerDto("
+    			  + "	a.firstName, a.lastName, a.address, a.city, a.telephone, a.ownerId "
+    			  + ") "
+    			  + "FROM Owner a "
+    			  + "ORDER BY a.ownerId DESC")
+    List<OwnerDto> findAll() throws DataAccessException;
 	
-    @Query("SELECT owner FROM Owner owner LEFT JOIN FETCH owner.pets")
+    @Query("SELECT a FROM Owner a LEFT JOIN FETCH a.pets")
     List<Owner> findAllOwnersAndTheirPets() throws DataAccessException;
 
-    @Query("SELECT type FROM PetType type")
+    @Query("SELECT a FROM PetType a")
     List<PetType> findPetTypes() throws DataAccessException;
 
     void save(Owner owner) throws DataAccessException;

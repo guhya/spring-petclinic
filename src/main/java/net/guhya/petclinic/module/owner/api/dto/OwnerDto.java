@@ -31,6 +31,24 @@ public class OwnerDto {
 	@JsonProperty("ownerId")
 	private Integer ownerId;
 
+	public OwnerDto() {}
+	
+	public OwnerDto(@NotEmpty String firstName, @NotEmpty String lastName, @NotEmpty String address,
+			@NotEmpty String city, @NotEmpty String telephone, Integer ownerId) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.address = address;
+		this.city = city;
+		this.telephone = telephone;
+		this.ownerId = ownerId;
+	}
+
+	public OwnerDto(@NotEmpty String firstName, @NotEmpty String lastName, Integer ownerId) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.ownerId = ownerId;
+	}
+
 	public String getFirstName() {
 		return firstName;
 	}

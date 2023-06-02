@@ -24,6 +24,7 @@ import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import net.guhya.petclinic.module.owner.api.dto.OwnerDto;
 import net.guhya.petclinic.module.owner.data.Owner;
 import net.guhya.petclinic.module.owner.data.PetType;
 import net.guhya.petclinic.module.owner.repository.OwnerRepository;
@@ -39,7 +40,7 @@ public class OwnerService {
     }
 
 	@Transactional(readOnly = true)
-	public List<Owner> findAll() throws DataAccessException {
+	public List<OwnerDto> findAll() throws DataAccessException {
 		return ownerRepository.findAll();
 	}
 
@@ -59,8 +60,8 @@ public class OwnerService {
 	}
 
 	@Transactional(readOnly = true)
-	public Owner findByOwnerId(int id) throws DataAccessException {
-		Owner owner = null;
+	public OwnerDto findByOwnerId(int id) throws DataAccessException {
+		OwnerDto owner = null;
 		try {
 			owner = ownerRepository.findByOwnerId(id);
 		} catch (ObjectRetrievalFailureException|EmptyResultDataAccessException e) {
@@ -76,7 +77,7 @@ public class OwnerService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<Owner> findByLastName(String lastName) throws DataAccessException {
+	public List<OwnerDto> findByLastName(String lastName) throws DataAccessException {
 		return ownerRepository.findByLastName(lastName);
 	}
 
