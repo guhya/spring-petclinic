@@ -26,30 +26,29 @@ import net.guhya.petclinic.module.owner.data.Owner;
 import net.guhya.petclinic.module.owner.data.PetType;
 
 public interface OwnerRepository extends Repository<Owner, Integer> {
+	
+	final String OWNER_DTO_QUERY = ""
+			  + "SELECT new net.guhya.petclinic.module.owner.api.dto.OwnerDto("
+			  + "	a.firstName, a.lastName, a.address, a.city, a.telephone, a.ownerId "
+			  + ") "
+			  + "FROM Owner a ";
+	
+	final String ORDER_BY_ID = "ORDER BY a.ownerId DESC";
 
     @Query(nativeQuery = false,
-    		value = "SELECT new net.guhya.petclinic.module.owner.api.dto.OwnerDto("
-      			  + "	a.firstName, a.lastName, a.address, a.city, a.telephone, a.ownerId "
-    			  + ") "
-    			  + "FROM Owner a "
+    		value = OWNER_DTO_QUERY
     			  + "WHERE a.lastName LIKE %:lastName% "
-    			  + "ORDER BY a.ownerId DESC")
+    			  + ORDER_BY_ID)
 	List<OwnerDto> findByLastName(String lastName) throws DataAccessException;
 
     @Query(nativeQuery = false,
-    		value = "SELECT new net.guhya.petclinic.module.owner.api.dto.OwnerDto("
-      			  + "	a.firstName, a.lastName, a.address, a.city, a.telephone, a.ownerId "
-    			  + ") "
-    			  + "FROM Owner a "
+    		value = OWNER_DTO_QUERY
     			  + "WHERE a.ownerId = :id ")
     OwnerDto findByOwnerId(int id) throws DataAccessException;
 
     @Query(nativeQuery = false,
-    		value = "SELECT new net.guhya.petclinic.module.owner.api.dto.OwnerDto("
-    			  + "	a.firstName, a.lastName, a.address, a.city, a.telephone, a.ownerId "
-    			  + ") "
-    			  + "FROM Owner a "
-    			  + "ORDER BY a.ownerId DESC")
+    		value = OWNER_DTO_QUERY
+    			  + ORDER_BY_ID)
     List<OwnerDto> findAll() throws DataAccessException;
 	
     @Query("SELECT a FROM Owner a LEFT JOIN FETCH a.pets")
