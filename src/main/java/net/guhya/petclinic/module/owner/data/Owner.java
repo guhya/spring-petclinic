@@ -17,19 +17,14 @@ package net.guhya.petclinic.module.owner.data;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
-import org.springframework.beans.support.MutableSortDefinition;
-import org.springframework.beans.support.PropertyComparator;
-import org.springframework.core.style.ToStringCreator;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotEmpty;
@@ -53,7 +48,8 @@ public class Owner extends Person {
     private String telephone;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner", fetch = FetchType.EAGER)
-    private Set<Pet> pets;
+    @OrderBy("birth_date ASC, id ASC")
+    private List<Pet> pets;
 
     public String getAddress() {
         return this.address;
@@ -79,25 +75,23 @@ public class Owner extends Person {
         this.telephone = telephone;
     }
 
-    protected Set<Pet> getPetsInternal() {
+    protected List<Pet> getPetsInternal() {
         if (this.pets == null) {
-            this.pets = new HashSet<>();
+            this.pets = new ArrayList<>();
         }
         return this.pets;
     }
 
-    protected void setPetsInternal(Set<Pet> pets) {
+    protected void setPetsInternal(List<Pet> pets) {
         this.pets = pets;
     }
 
     public List<Pet> getPets() {
-        List<Pet> sortedPets = new ArrayList<>(getPetsInternal());
-        PropertyComparator.sort(sortedPets, new MutableSortDefinition("name", true, true));
-        return Collections.unmodifiableList(sortedPets);
+        return Collections.unmodifiableList(getPetsInternal());
     }
 
     public void setPets(List<Pet> pets) {
-        this.pets = new HashSet<>(pets);
+        this.pets = new ArrayList<>(pets);
     }
 
     public void addPet(Pet pet) {

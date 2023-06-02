@@ -21,10 +21,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import net.guhya.petclinic.module.owner.api.dto.OwnerDto;
 import net.guhya.petclinic.module.owner.api.mapper.OwnerMapper;
 import net.guhya.petclinic.module.owner.api.mapper.PetMapper;
@@ -46,6 +51,8 @@ class OwnerRestController {
             VisitMapper visitMapper) {
 		this.ownerService = ownerService;
 		this.ownerMapper = ownerMapper;
+		
+		logger.info("Owner API loaded");
 	}
 	
 	@GetMapping("/owner")
@@ -63,15 +70,45 @@ class OwnerRestController {
     }
 	
 	@GetMapping("/owner/{ownerId}")
-    public ResponseEntity<OwnerDto> getOwner(@PathVariable("ownerId") Integer ownerId) {
+    public ResponseEntity<OwnerDto> getOwner(@PathVariable Integer ownerId) {
         Owner owner = ownerService.findById(ownerId);
-        
-        logger.debug("\n### Owner : {}", owner);
-        
         if (owner == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);        
+        
         OwnerDto ownerDto = ownerMapper.toOwnerDto(owner);
         
         return new ResponseEntity<>(ownerDto, HttpStatus.OK);
     }
+	
+	@PostMapping("/owner")
+    public ResponseEntity<OwnerDto> addOwner(@Valid @RequestBody OwnerDto ownerDto) {
+		if (ownerDto.getId() != null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			
+        Owner owner = ownerMapper.toOwner(ownerDto);
+        ownerService.save(owner);
+        OwnerDto savedDto = ownerMapper.toOwnerDto(owner);
+        return new ResponseEntity<>(savedDto, HttpStatus.CREATED);
+    }
 
+	@PutMapping("/owner")
+    public ResponseEntity<OwnerDto> updateOwner(@Valid @RequestBody OwnerDto ownerDto) {
+		if (ownerDto.getId() == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		
+		Owner existingOwner = ownerService.findById(ownerDto.getId());
+		if (existingOwner == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			
+        Owner owner = ownerMapper.toOwner(ownerDto);
+        ownerService.save(owner);
+        OwnerDto savedDto = ownerMapper.toOwnerDto(owner);
+        return new ResponseEntity<>(savedDto, HttpStatus.OK);
+    }
+	
+	@DeleteMapping("/owner/{ownerId}")
+    public ResponseEntity<OwnerDto> deleteOwner(@PathVariable Integer ownerId) {
+		Owner existingOwner = ownerService.findById(ownerId);
+		if (existingOwner == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		
+		ownerService.delete(existingOwner);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+	
 }

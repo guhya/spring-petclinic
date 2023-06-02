@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.guhya.petclinic.module.vet;
+package net.guhya.petclinic.module.vet.repository;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataAccessException;
@@ -39,6 +39,6 @@ public interface VetRepository extends Repository<Vet, Integer> {
 	 */
 	@Transactional(readOnly = true)
 	@Cacheable("vets")
-	Collection<Vet> findAll() throws DataAccessException;
+	List<Vet> findAll() throws DataAccessException;
 
 }

@@ -21,8 +21,6 @@ import net.guhya.petclinic.module.common.entity.NamedEntity;
 
 /**
  * Models a {@link Vet Vet's} specialty (for example, dentistry).
- *
- * @author Juergen Hoeller
  */
 @Entity
 @Table(name = "specialties")

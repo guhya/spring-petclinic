@@ -18,12 +18,7 @@ package net.guhya.petclinic.module.owner.data;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
-import org.springframework.beans.support.MutableSortDefinition;
-import org.springframework.beans.support.PropertyComparator;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -32,6 +27,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import net.guhya.petclinic.module.common.entity.NamedEntity;
 
@@ -51,7 +47,8 @@ public class Pet extends NamedEntity {
     private Owner owner;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pet", fetch = FetchType.EAGER)
-    private Set<Visit> visits;
+    @OrderBy("date DESC")
+    private List<Visit> visits;
 
     public LocalDate getBirthDate() {
         return this.birthDate;
@@ -77,25 +74,23 @@ public class Pet extends NamedEntity {
         this.owner = owner;
     }
 
-    protected Set<Visit> getVisitsInternal() {
+    protected List<Visit> getVisitsInternal() {
         if (this.visits == null) {
-            this.visits = new HashSet<>();
+            this.visits = new ArrayList<>();
         }
         return this.visits;
     }
 
-    protected void setVisitsInternal(Set<Visit> visits) {
+    protected void setVisitsInternal(List<Visit> visits) {
         this.visits = visits;
     }
 
     public List<Visit> getVisits() {
-        List<Visit> sortedVisits = new ArrayList<>(getVisitsInternal());
-        PropertyComparator.sort(sortedVisits, new MutableSortDefinition("date", false, false));
-        return Collections.unmodifiableList(sortedVisits);
+        return Collections.unmodifiableList(getVisitsInternal());
     }
 
     public void setVisits(List<Visit> visits) {
-        this.visits = new HashSet<>(visits);
+        this.visits = new ArrayList<>(visits);
     }
 
     public void addVisit(Visit visit) {

@@ -49,7 +49,9 @@ public class ExceptionControllerAdvice {
         } catch (JsonProcessingException e1) {
             e1.printStackTrace();
         }
-        return ResponseEntity.badRequest().body(respJSONstring);
+        
+        e.printStackTrace();
+        return ResponseEntity.internalServerError().body(respJSONstring);
     }
 
     /**
@@ -62,15 +64,13 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(code = BAD_REQUEST)
     @ResponseBody
-    public ResponseEntity<Void> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, WebRequest request) {
+    public ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, WebRequest request) {
         BindingErrorsResponse errors = new BindingErrorsResponse();
         BindingResult bindingResult = ex.getBindingResult();
-        HttpHeaders headers = new HttpHeaders();
         if (bindingResult.hasErrors()) {
             errors.addAllErrors(bindingResult);
-            headers.add("errors", errors.toJSON());
         }
-        return new ResponseEntity<>(headers, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errors.toJSON(), HttpStatus.BAD_REQUEST);
     }
 
     private class ErrorInfo {

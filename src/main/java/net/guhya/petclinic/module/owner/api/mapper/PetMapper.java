@@ -13,7 +13,7 @@ import net.guhya.petclinic.module.owner.data.PetType;
 /**
  * Map Pet & PetDto using mapstruct
  */
-@Mapper
+@Mapper(uses = VisitMapper.class)
 public interface PetMapper {
 
     @Mapping(source = "owner.id", target = "ownerId")

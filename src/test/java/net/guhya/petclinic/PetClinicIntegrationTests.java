@@ -29,7 +29,7 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import net.guhya.petclinic.module.vet.VetRepository;
+import net.guhya.petclinic.module.vet.repository.VetRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class PetClinicIntegrationTests {
