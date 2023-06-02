@@ -22,6 +22,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
 import net.guhya.petclinic.module.owner.data.Owner;
+import net.guhya.petclinic.module.owner.data.PetType;
 
 public interface OwnerRepository extends Repository<Owner, Integer> {
 
@@ -39,6 +40,9 @@ public interface OwnerRepository extends Repository<Owner, Integer> {
 	
     @Query("SELECT owner FROM Owner owner LEFT JOIN FETCH owner.pets")
     List<Owner> findAllOwnersAndTheirPets() throws DataAccessException;
+
+    @Query("SELECT type FROM PetType type")
+    List<PetType> findPetTypes() throws DataAccessException;
 
     void save(Owner owner) throws DataAccessException;
     

@@ -15,7 +15,9 @@
  */
 package net.guhya.petclinic.module.owner.api;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,8 +34,10 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import net.guhya.petclinic.module.owner.api.dto.OwnerAndPetDto;
 import net.guhya.petclinic.module.owner.api.dto.OwnerDto;
+import net.guhya.petclinic.module.owner.api.dto.PetDto;
 import net.guhya.petclinic.module.owner.api.mapper.OwnerMapper;
 import net.guhya.petclinic.module.owner.data.Owner;
+import net.guhya.petclinic.module.owner.data.PetType;
 import net.guhya.petclinic.module.owner.service.OwnerService;
 
 @RestController
@@ -70,6 +74,19 @@ class OwnerRestController {
         List<Owner> owners = ownerService.findAllOwnersAndTheirPets();
         List<OwnerAndPetDto> ownerListDto = ownerMapper.toOwnerAndPetDtoList(owners);
         
+		List<PetType> typeList = ownerService.findPetTypes();
+		Map<Integer, String> typeMap = new HashMap<>();
+		for (PetType type : typeList) {
+			typeMap.put(type.getTypeId(), type.getName());
+		}
+		
+		for (OwnerAndPetDto owner : ownerListDto) {
+			List<PetDto> petList = owner.getPets();
+			for (PetDto pet : petList) {
+				String typeId = pet.getType();
+				pet.setType(typeMap.get(Integer.valueOf(typeId)));
+			}
+		}        
         return new ResponseEntity<>(ownerListDto, HttpStatus.OK);
     }
 

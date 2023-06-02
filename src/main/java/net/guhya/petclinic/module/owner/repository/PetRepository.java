@@ -18,16 +18,11 @@ package net.guhya.petclinic.module.owner.repository;
 import java.util.List;
 
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
 import net.guhya.petclinic.module.owner.data.Pet;
-import net.guhya.petclinic.module.owner.data.PetType;
 
 public interface PetRepository extends Repository<Pet, Integer> {
-
-    @Query("SELECT ptype FROM PetType ptype ORDER BY ptype.name")
-    List<PetType> findPetTypes() throws DataAccessException;
 
     Pet findByPetId(int id) throws DataAccessException;
 

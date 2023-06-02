@@ -15,7 +15,6 @@
  */
 package net.guhya.petclinic.module.owner.service;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.guhya.petclinic.module.owner.data.Pet;
-import net.guhya.petclinic.module.owner.data.PetType;
 import net.guhya.petclinic.module.owner.repository.PetRepository;
 
 @Service
@@ -64,11 +62,6 @@ public class PetService {
 	@Transactional
 	public void savePet(Pet pet) throws DataAccessException {
 		petRepository.save(pet);
-	}
-
-	@Transactional(readOnly = true)
-	public Collection<PetType> findPetTypes() throws DataAccessException {
-		return petRepository.findPetTypes();
 	}
 
 }

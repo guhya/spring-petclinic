@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.guhya.petclinic.module.owner.data.Owner;
+import net.guhya.petclinic.module.owner.data.PetType;
 import net.guhya.petclinic.module.owner.repository.OwnerRepository;
 
 @Service
@@ -45,6 +46,11 @@ public class OwnerService {
 	@Transactional(readOnly = true)
 	public List<Owner> findAllOwnersAndTheirPets() throws DataAccessException {
 		return ownerRepository.findAllOwnersAndTheirPets();
+	}
+
+	@Transactional(readOnly = true)
+	public List<PetType> findPetTypes() throws DataAccessException {
+		return ownerRepository.findPetTypes();
 	}
 
 	@Transactional
