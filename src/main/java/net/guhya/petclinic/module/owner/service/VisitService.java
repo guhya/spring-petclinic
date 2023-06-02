@@ -48,10 +48,10 @@ public class VisitService {
 	}
 
 	@Transactional(readOnly = true)
-	public Visit findById(int id) throws DataAccessException {
+	public Visit findByVisitId(int id) throws DataAccessException {
 		Visit visit = null;
 		try {
-			visit = visitRepository.findById(id);
+			visit = visitRepository.findByVisitId(id);
 		} catch (ObjectRetrievalFailureException|EmptyResultDataAccessException e) {
 			// just ignore not found exceptions for Jdbc/Jpa realization
 			return null;

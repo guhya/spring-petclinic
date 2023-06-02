@@ -24,33 +24,59 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
-import net.guhya.petclinic.module.common.entity.NamedEntity;
 
 @Entity
-@Table(name = "pets")
-public class Pet extends NamedEntity {
+@Table(name = "pet")
+public class Pet {
 
-    @Column(name = "birth_date", columnDefinition = "DATE")
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "pet_id")
+	private Integer petId;
+
+	@Column(name = "name")
+	private String name;
+
+	@Column(name = "birth_date", columnDefinition = "DATE")
     private LocalDate birthDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "type_id")
     private PetType type;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
     private Owner owner;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pet", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pet", fetch = FetchType.LAZY)
     @OrderBy("date DESC")
     private List<Visit> visits;
 
-    public LocalDate getBirthDate() {
+    public Integer getPetId() {
+		return petId;
+	}
+
+	public void setPetId(Integer petId) {
+		this.petId = petId;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public LocalDate getBirthDate() {
         return this.birthDate;
     }
 
@@ -101,12 +127,16 @@ public class Pet extends NamedEntity {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Pet [birthDate=");
+		builder.append("Pet [petId=");
+		builder.append(petId);
+		builder.append(", name=");
+		builder.append(name);
+		builder.append(", birthDate=");
 		builder.append(birthDate);
 		builder.append(", type=");
 		builder.append(type);
 		builder.append(", owner=");
-		builder.append(owner.getId());
+		builder.append(owner.getOwnerId());
 		builder.append(", visits=");
 		builder.append(visits);
 		builder.append("]");

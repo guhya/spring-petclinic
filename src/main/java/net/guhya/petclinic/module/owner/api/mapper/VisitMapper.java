@@ -16,7 +16,7 @@ public interface VisitMapper {
     
 	Visit toVisit(VisitDto visitDto);
 
-    @Mapping(source = "pet.id", target = "petId")
+    @Mapping(source = "pet.petId", target = "petId")
     VisitDto toVisitDto(Visit visit);
 
     List<VisitDto> toVisitsDto(List<Visit> visits);

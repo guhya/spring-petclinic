@@ -15,15 +15,41 @@
  */
 package net.guhya.petclinic.module.vet.data;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import net.guhya.petclinic.module.common.entity.NamedEntity;
 
 /**
  * Models a {@link Vet Vet's} specialty (for example, dentistry).
  */
 @Entity
-@Table(name = "specialties")
-public class Specialty extends NamedEntity {
+@Table(name = "specialty")
+public class Specialty {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "specialty_id")
+	private Integer specialtyId;
+
+	@Column(name = "name")
+	private String name;
+
+	public Integer getSpecialtyId() {
+		return specialtyId;
+	}
+
+	public void setTypeId(Integer specialtyId) {
+		this.specialtyId = specialtyId;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 }

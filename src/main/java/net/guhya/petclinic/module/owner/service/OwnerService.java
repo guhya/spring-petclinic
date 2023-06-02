@@ -42,16 +42,21 @@ public class OwnerService {
 		return ownerRepository.findAll();
 	}
 
+	@Transactional(readOnly = true)
+	public List<Owner> findAllOwnersAndTheirPets() throws DataAccessException {
+		return ownerRepository.findAllOwnersAndTheirPets();
+	}
+
 	@Transactional
 	public void delete(Owner owner) throws DataAccessException {
 		ownerRepository.delete(owner);
 	}
 
 	@Transactional(readOnly = true)
-	public Owner findById(int id) throws DataAccessException {
+	public Owner findByOwnerId(int id) throws DataAccessException {
 		Owner owner = null;
 		try {
-			owner = ownerRepository.findById(id);
+			owner = ownerRepository.findByOwnerId(id);
 		} catch (ObjectRetrievalFailureException|EmptyResultDataAccessException e) {
 			// just ignore not found exceptions for Jdbc/Jpa realization
 			return null;

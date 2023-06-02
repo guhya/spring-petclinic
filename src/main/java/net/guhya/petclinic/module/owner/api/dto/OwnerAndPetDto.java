@@ -1,12 +1,16 @@
 package net.guhya.petclinic.module.owner.api.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 
 @JsonTypeName("Owner")
-public class OwnerDto {
+public class OwnerAndPetDto {
 
 	@JsonProperty("firstName")
 	@NotEmpty
@@ -30,6 +34,10 @@ public class OwnerDto {
 
 	@JsonProperty("ownerId")
 	private Integer ownerId;
+
+	@JsonProperty("pets")
+	@Valid
+	private List<PetDto> pets = new ArrayList<>();
 
 	public String getFirstName() {
 		return firstName;
@@ -78,5 +86,13 @@ public class OwnerDto {
 	public void setOwnerId(Integer ownerId) {
 		this.ownerId = ownerId;
 	}
+	
+	public List<PetDto> getPets() {
+		return pets;
+	}
+
+	public void setPets(List<PetDto> pets) {
+		this.pets = pets;
+	}	
 
 }

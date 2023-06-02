@@ -17,31 +17,42 @@ package net.guhya.petclinic.module.vet.data;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import org.springframework.beans.support.MutableSortDefinition;
-import org.springframework.beans.support.PropertyComparator;
-
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.xml.bind.annotation.XmlElement;
-import net.guhya.petclinic.module.common.entity.Person;
 
 /**
  * Simple JavaBean domain object representing a veterinarian.
  */
 @Entity
-@Table(name = "vets")
-public class Vet extends Person {
+@Table(name = "vet")
+public class Vet {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "vet_id")
+	private Integer vetId;
+
+	public Integer getVetId() {
+		return vetId;
+	}
+
+	public void setTypeId(Integer vetId) {
+		this.vetId = vetId;
+	}
 
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "vet_specialties", joinColumns = @JoinColumn(name = "vet_id"),
+	@JoinTable(name = "vet_specialty", joinColumns = @JoinColumn(name = "vet_id"),
 			inverseJoinColumns = @JoinColumn(name = "specialty_id"))
 	private List<Specialty> specialties;
 

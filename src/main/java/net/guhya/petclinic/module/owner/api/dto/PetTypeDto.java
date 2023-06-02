@@ -10,9 +10,9 @@ public class PetTypeDto {
 	@JsonProperty("name")
 	private String name;
 
-	@JsonProperty("id")
+	@JsonProperty("typeId")
 	@JsonIgnore
-	private Integer id;
+	private Integer typeId;
 
 	public String getName() {
 		return name;
@@ -22,12 +22,12 @@ public class PetTypeDto {
 		this.name = name;
 	}
 
-	public Integer getId() {
-		return id;
+	public Integer getTypeId() {
+		return typeId;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void seTypetId(Integer typeId) {
+		this.typeId = typeId;
 	}
 
 }

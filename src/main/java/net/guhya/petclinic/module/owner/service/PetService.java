@@ -16,6 +16,7 @@
 package net.guhya.petclinic.module.owner.service;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -39,7 +40,7 @@ public class PetService {
     }
 
 	@Transactional(readOnly = true)
-	public Collection<Pet> findAll() throws DataAccessException {
+	public List<Pet> findAll() throws DataAccessException {
 		return petRepository.findAll();
 	}
 
@@ -52,7 +53,7 @@ public class PetService {
 	public Pet findById(int id) throws DataAccessException {
 		Pet pet = null;
 		try {
-			pet = petRepository.findById(id);
+			pet = petRepository.findByPetId(id);
 		} catch (ObjectRetrievalFailureException|EmptyResultDataAccessException e) {
 			// just ignore not found exceptions for Jdbc/Jpa realization
 			return null;

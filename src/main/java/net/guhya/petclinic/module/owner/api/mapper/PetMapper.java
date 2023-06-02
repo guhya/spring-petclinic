@@ -16,13 +16,15 @@ import net.guhya.petclinic.module.owner.data.PetType;
 @Mapper(uses = VisitMapper.class)
 public interface PetMapper {
 
-    @Mapping(source = "owner.id", target = "ownerId")
+    @Mapping(source = "owner.ownerId", target = "ownerId")
+    @Mapping(source = "type.typeId", target = "type")
     PetDto toPetDto(Pet pet);
 
     List<PetDto> toPetsDto(List<Pet> pets);
 
     List<Pet> toPets(List<PetDto> pets);
 
+    @Mapping(source = "type", target = "type.typeId")
     Pet toPet(PetDto petDto);
 
     PetTypeDto toPetTypeDto(PetType petType);

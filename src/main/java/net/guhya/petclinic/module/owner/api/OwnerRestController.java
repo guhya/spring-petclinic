@@ -30,10 +30,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
+import net.guhya.petclinic.module.owner.api.dto.OwnerAndPetDto;
 import net.guhya.petclinic.module.owner.api.dto.OwnerDto;
 import net.guhya.petclinic.module.owner.api.mapper.OwnerMapper;
-import net.guhya.petclinic.module.owner.api.mapper.PetMapper;
-import net.guhya.petclinic.module.owner.api.mapper.VisitMapper;
 import net.guhya.petclinic.module.owner.data.Owner;
 import net.guhya.petclinic.module.owner.service.OwnerService;
 
@@ -45,10 +44,7 @@ class OwnerRestController {
     private final OwnerService ownerService;
     private final OwnerMapper ownerMapper;
     
-    public OwnerRestController(OwnerService ownerService,
-            OwnerMapper ownerMapper,
-            PetMapper petMapper,
-            VisitMapper visitMapper) {
+    public OwnerRestController(OwnerService ownerService, OwnerMapper ownerMapper) {
 		this.ownerService = ownerService;
 		this.ownerMapper = ownerMapper;
 		
@@ -69,9 +65,17 @@ class OwnerRestController {
         return new ResponseEntity<>(ownerListDto, HttpStatus.OK);
     }
 	
+	@GetMapping("/owner/pet")
+    public ResponseEntity<List<OwnerAndPetDto>> listOwnersAndTheirPets() {
+        List<Owner> owners = ownerService.findAllOwnersAndTheirPets();
+        List<OwnerAndPetDto> ownerListDto = ownerMapper.toOwnerAndPetDtoList(owners);
+        
+        return new ResponseEntity<>(ownerListDto, HttpStatus.OK);
+    }
+
 	@GetMapping("/owner/{ownerId}")
     public ResponseEntity<OwnerDto> getOwner(@PathVariable Integer ownerId) {
-        Owner owner = ownerService.findById(ownerId);
+        Owner owner = ownerService.findByOwnerId(ownerId);
         if (owner == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);        
         
         OwnerDto ownerDto = ownerMapper.toOwnerDto(owner);
@@ -81,7 +85,7 @@ class OwnerRestController {
 	
 	@PostMapping("/owner")
     public ResponseEntity<OwnerDto> addOwner(@Valid @RequestBody OwnerDto ownerDto) {
-		if (ownerDto.getId() != null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		if (ownerDto.getOwnerId() != null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			
         Owner owner = ownerMapper.toOwner(ownerDto);
         ownerService.save(owner);
@@ -91,9 +95,9 @@ class OwnerRestController {
 
 	@PutMapping("/owner")
     public ResponseEntity<OwnerDto> updateOwner(@Valid @RequestBody OwnerDto ownerDto) {
-		if (ownerDto.getId() == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		if (ownerDto.getOwnerId() == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		
-		Owner existingOwner = ownerService.findById(ownerDto.getId());
+		Owner existingOwner = ownerService.findByOwnerId(ownerDto.getOwnerId());
 		if (existingOwner == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			
         Owner owner = ownerMapper.toOwner(ownerDto);
@@ -104,7 +108,7 @@ class OwnerRestController {
 	
 	@DeleteMapping("/owner/{ownerId}")
     public ResponseEntity<OwnerDto> deleteOwner(@PathVariable Integer ownerId) {
-		Owner existingOwner = ownerService.findById(ownerId);
+		Owner existingOwner = ownerService.findByOwnerId(ownerId);
 		if (existingOwner == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		
 		ownerService.delete(existingOwner);

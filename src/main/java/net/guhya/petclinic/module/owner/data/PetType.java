@@ -15,12 +15,49 @@
  */
 package net.guhya.petclinic.module.owner.data;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import net.guhya.petclinic.module.common.entity.NamedEntity;
 
 @Entity
-@Table(name = "types")
-public class PetType extends NamedEntity {
+@Table(name = "type")
+public class PetType {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "type_id")
+	private Integer typeId;
+
+	@Column(name = "name")
+	private String name;
+
+	public Integer getTypeId() {
+		return typeId;
+	}
+
+	public void setTypeId(Integer typeId) {
+		this.typeId = typeId;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("PetType [typeId=");
+		builder.append(typeId);
+		builder.append(", name=");
+		builder.append(name);
+		builder.append("]");
+		return builder.toString();
+	}
 }

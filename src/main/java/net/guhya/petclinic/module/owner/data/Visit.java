@@ -19,17 +19,24 @@ import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
-import net.guhya.petclinic.module.common.entity.BaseEntity;
 
 @Entity
-@Table(name = "visits")
-public class Visit extends BaseEntity {
+@Table(name = "visit")
+public class Visit {
 
-    @Column(name = "visit_date", columnDefinition = "DATE")
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "visit_id")
+	private Integer visitId;
+
+	@Column(name = "visit_date", columnDefinition = "DATE")
     private LocalDate date;
 
     @NotEmpty
@@ -40,7 +47,15 @@ public class Visit extends BaseEntity {
     @JoinColumn(name = "pet_id")
     private Pet pet;
 
-    public Visit() {
+    public Integer getVisitId() {
+		return visitId;
+	}
+
+	public void setVisitId(Integer visitId) {
+		this.visitId = visitId;
+	}
+
+	public Visit() {
         this.date = LocalDate.now();
     }
 
@@ -101,16 +116,17 @@ public class Visit extends BaseEntity {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Visit [date=");
+		builder.append("Visit [visitId=");
+		builder.append(visitId);
+		builder.append(", date=");
 		builder.append(date);
 		builder.append(", description=");
 		builder.append(description);
 		builder.append(", pet=");
-		builder.append(pet.getId());
+		builder.append(pet.getPetId());
 		builder.append("]");
 		return builder.toString();
 	}
-    
-    
+
 
 }

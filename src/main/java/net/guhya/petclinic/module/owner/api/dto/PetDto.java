@@ -1,8 +1,6 @@
 package net.guhya.petclinic.module.owner.api.dto;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -10,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 
 @JsonTypeName("Pet")
@@ -27,19 +24,14 @@ public class PetDto {
 
 	@JsonProperty("type")
 	@NotEmpty
-	private PetTypeDto type;
+	private String type;
 
-	@JsonProperty("id")
-	private Integer id;
+	@JsonProperty("petId")
+	private Integer petId;
 
 	@JsonProperty("ownerId")
 	@NotEmpty
-	@JsonIgnore
 	private Integer ownerId;
-
-	@JsonProperty("visits")
-	@Valid
-	private List<VisitDto> visits = new ArrayList<>();
 
 	public String getName() {
 		return name;
@@ -57,20 +49,20 @@ public class PetDto {
 		this.birthDate = birthDate;
 	}
 
-	public PetTypeDto getType() {
+	public String getType() {
 		return type;
 	}
 
-	public void setType(PetTypeDto type) {
+	public void setType(String type) {
 		this.type = type;
 	}
 
-	public Integer getId() {
-		return id;
+	public Integer getPetId() {
+		return petId;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setPetId(Integer petId) {
+		this.petId = petId;
 	}
 
 	public Integer getOwnerId() {
@@ -79,15 +71,6 @@ public class PetDto {
 
 	public void setOwnerId(Integer ownerId) {
 		this.ownerId = ownerId;
-	}
-
-	public List<VisitDto> getVisits() {
-		return visits;
-	}
-
-	public void setVisits(List<VisitDto> visits) {
-		this.visits = visits;
-	}
-	
+	}	
 	
 }

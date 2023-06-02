@@ -21,55 +21,20 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
-import net.guhya.petclinic.module.common.entity.BaseEntity;
 import net.guhya.petclinic.module.owner.data.Pet;
 import net.guhya.petclinic.module.owner.data.PetType;
 
-/**
- * Repository class for <code>Pet</code> domain objects All method names are compliant with Spring Data naming
- * conventions so this interface can easily be extended for Spring Data See here: http://static.springsource.org/spring-data/jpa/docs/current/reference/html/jpa.repositories.html#jpa.query-methods.query-creation
- */
 public interface PetRepository extends Repository<Pet, Integer> {
 
-    /**
-     * Retrieve all <code>PetType</code>s from the data store.
-     *
-     * @return a <code>Collection</code> of <code>PetType</code>s
-     */
     @Query("SELECT ptype FROM PetType ptype ORDER BY ptype.name")
     List<PetType> findPetTypes() throws DataAccessException;
 
-    /**
-     * Retrieve a <code>Pet</code> from the data store by id.
-     *
-     * @param id the id to search for
-     * @return the <code>Pet</code> if found
-     * @throws org.springframework.dao.DataRetrievalFailureException if not found
-     */
-    Pet findById(int id) throws DataAccessException;
+    Pet findByPetId(int id) throws DataAccessException;
 
-    /**
-     * Save a <code>Pet</code> to the data store, either inserting or updating it.
-     *
-     * @param pet the <code>Pet</code> to save
-     * @see BaseEntity#isNew
-     */
     void save(Pet pet) throws DataAccessException;
     
-    /**
-     * Retrieve <code>Pet</code>s from the data store, returning all owners 
-     *
-     * @return a <code>Collection</code> of <code>Pet</code>s (or an empty <code>Collection</code> if none
-     * found)
-     */
     List<Pet> findAll() throws DataAccessException;
 
-    /**
-     * Delete an <code>Pet</code> to the data store by <code>Pet</code>.
-     *
-     * @param pet the <code>Pet</code> to delete
-     * 
-     */
 	void delete(Pet pet) throws DataAccessException;
 
 }

@@ -21,8 +21,8 @@ public class VisitDto {
 	@JsonProperty("description")
 	private String description;
 
-	@JsonProperty("id")
-	private Integer id;
+	@JsonProperty("visitId")
+	private Integer visitId;
 
 	@JsonProperty("petId")
 	private Integer petId;
@@ -43,12 +43,12 @@ public class VisitDto {
 		this.description = description;
 	}
 
-	public Integer getId() {
-		return id;
+	public Integer getVisitId() {
+		return visitId;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setVisitId(Integer visitId) {
+		this.visitId = visitId;
 	}
 
 	public Integer getPetId() {
