@@ -30,10 +30,11 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotEmpty;
+import net.guhya.petclinic.module.common.api.SimpleAudit;
 
 @Entity
 @Table(name = "owner")
-public class Owner {
+public class Owner extends SimpleAudit {
     
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

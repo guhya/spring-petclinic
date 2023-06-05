@@ -29,7 +29,8 @@ public interface OwnerRepository extends Repository<Owner, Integer> {
 	
 	final String OWNER_DTO_QUERY = ""
 			  + "SELECT new net.guhya.petclinic.module.owner.api.dto.OwnerDto("
-			  + "	a.firstName, a.lastName, a.address, a.city, a.telephone, a.ownerId "
+			  + "	a.firstName, a.lastName, a.address, a.city, a.telephone, a.ownerId"
+			  + "	, a.createdBy, a.createdAt, a.modifiedBy, a.modifiedAt "
 			  + ") "
 			  + "FROM Owner a ";
 	

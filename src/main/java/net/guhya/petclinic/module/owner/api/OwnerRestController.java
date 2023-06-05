@@ -117,9 +117,10 @@ class OwnerRestController {
 			
         Owner owner = ownerMapper.toOwner(ownerDto);
         ownerService.save(owner);
-        OwnerDto savedDto = ownerMapper.toOwnerDto(owner);
         
-        return new ResponseEntity<>(savedDto, HttpStatus.OK);
+		existingOwnerDto = ownerService.findByOwnerId(ownerDto.getOwnerId());
+        
+        return new ResponseEntity<>(existingOwnerDto, HttpStatus.OK);
     }
 	
 	@DeleteMapping("/owner/{ownerId}")

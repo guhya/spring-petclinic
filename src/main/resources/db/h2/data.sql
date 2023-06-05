@@ -22,16 +22,16 @@ INSERT INTO type VALUES (default, 'snake');
 INSERT INTO type VALUES (default, 'bird');
 INSERT INTO type VALUES (default, 'hamster');
 
-INSERT INTO owner VALUES (default, 'George', 'Franklin', '110 W. Liberty St.', 'Madison', '6085551023');
-INSERT INTO owner VALUES (default, 'Betty', 'Davis', '638 Cardinal Ave.', 'Sun Prairie', '6085551749');
-INSERT INTO owner VALUES (default, 'Eduardo', 'Rodriquez', '2693 Commerce St.', 'McFarland', '6085558763');
-INSERT INTO owner VALUES (default, 'Harold', 'Davis', '563 Friendly St.', 'Windsor', '6085553198');
-INSERT INTO owner VALUES (default, 'Peter', 'McTavish', '2387 S. Fair Way', 'Madison', '6085552765');
-INSERT INTO owner VALUES (default, 'Jean', 'Coleman', '105 N. Lake St.', 'Monona', '6085552654');
-INSERT INTO owner VALUES (default, 'Jeff', 'Black', '1450 Oak Blvd.', 'Monona', '6085555387');
-INSERT INTO owner VALUES (default, 'Maria', 'Escobito', '345 Maple St.', 'Madison', '6085557683');
-INSERT INTO owner VALUES (default, 'David', 'Schroeder', '2749 Blackhawk Trail', 'Madison', '6085559435');
-INSERT INTO owner VALUES (default, 'Carlos', 'Estaban', '2335 Independence La.', 'Waunakee', '6085555487');
+INSERT INTO owner VALUES (default, 'George', 'Franklin', '110 W. Liberty St.', 'Madison', '6085551023', 'admin', CURRENT_TIMESTAMP(), 'admin', CURRENT_TIMESTAMP());
+INSERT INTO owner VALUES (default, 'Betty', 'Davis', '638 Cardinal Ave.', 'Sun Prairie', '6085551749', 'admin', CURRENT_TIMESTAMP(), 'admin', CURRENT_TIMESTAMP());
+INSERT INTO owner VALUES (default, 'Eduardo', 'Rodriquez', '2693 Commerce St.', 'McFarland', '6085558763', 'admin', CURRENT_TIMESTAMP(), 'admin', CURRENT_TIMESTAMP());
+INSERT INTO owner VALUES (default, 'Harold', 'Davis', '563 Friendly St.', 'Windsor', '6085553198', 'admin', CURRENT_TIMESTAMP(), 'admin', CURRENT_TIMESTAMP());
+INSERT INTO owner VALUES (default, 'Peter', 'McTavish', '2387 S. Fair Way', 'Madison', '6085552765', 'admin', CURRENT_TIMESTAMP(), 'admin', CURRENT_TIMESTAMP());
+INSERT INTO owner VALUES (default, 'Jean', 'Coleman', '105 N. Lake St.', 'Monona', '6085552654', 'admin', CURRENT_TIMESTAMP(), 'admin', CURRENT_TIMESTAMP());
+INSERT INTO owner VALUES (default, 'Jeff', 'Black', '1450 Oak Blvd.', 'Monona', '6085555387', 'admin', CURRENT_TIMESTAMP(), 'admin', CURRENT_TIMESTAMP());
+INSERT INTO owner VALUES (default, 'Maria', 'Escobito', '345 Maple St.', 'Madison', '6085557683', 'admin', CURRENT_TIMESTAMP(), 'admin', CURRENT_TIMESTAMP());
+INSERT INTO owner VALUES (default, 'David', 'Schroeder', '2749 Blackhawk Trail', 'Madison', '6085559435', 'admin', CURRENT_TIMESTAMP(), 'admin', CURRENT_TIMESTAMP());
+INSERT INTO owner VALUES (default, 'Carlos', 'Estaban', '2335 Independence La.', 'Waunakee', '6085555487', 'admin', CURRENT_TIMESTAMP(), 'admin', CURRENT_TIMESTAMP());
 
 INSERT INTO pet VALUES (default, 'Leo', '2010-09-07', 1, 1);
 INSERT INTO pet VALUES (default, 'Basil', '2012-08-06', 6, 2);
