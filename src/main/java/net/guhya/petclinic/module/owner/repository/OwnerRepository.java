@@ -55,6 +55,14 @@ public interface OwnerRepository extends Repository<Owner, Integer> {
     @Query("SELECT a FROM Owner a LEFT JOIN FETCH a.pets")
     List<Owner> findAllOwnersAndTheirPets() throws DataAccessException;
 
+    @Query(""
+			  + "SELECT "
+			  + "	a.firstName, a.lastName, a.address, a.city, a.telephone, a.ownerId"
+			  + "	, a.createdBy, a.createdAt, a.modifiedBy, a.modifiedAt "
+			  + "	, b.petId, b.name "
+			  + "FROM Owner a LEFT JOIN a.pets b")
+    List<Object[]> findAllOwnersAndPets() throws DataAccessException;
+
     @Query("SELECT a FROM PetType a")
     List<PetType> findPetTypes() throws DataAccessException;
 

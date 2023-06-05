@@ -50,6 +50,11 @@ public class OwnerService {
 	}
 
 	@Transactional(readOnly = true)
+	public List<Object[]> findAllOwnersAndPets() throws DataAccessException {
+		return ownerRepository.findAllOwnersAndPets();
+	}
+
+	@Transactional(readOnly = true)
 	public List<PetType> findPetTypes() throws DataAccessException {
 		return ownerRepository.findPetTypes();
 	}

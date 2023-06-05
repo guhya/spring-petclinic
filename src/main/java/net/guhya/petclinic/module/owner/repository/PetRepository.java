@@ -18,17 +18,38 @@ package net.guhya.petclinic.module.owner.repository;
 import java.util.List;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
+import net.guhya.petclinic.module.owner.api.dto.PetWithTypeAndOwnerDto;
 import net.guhya.petclinic.module.owner.data.Pet;
 
 public interface PetRepository extends Repository<Pet, Integer> {
 
-    Pet findByPetId(int id) throws DataAccessException;
+	final String PET_DTO_QUERY = ""
+			  + "SELECT new net.guhya.petclinic.module.owner.api.dto.PetWithTypeAndOwnerDto("
+			  + "	a.petId AS petId, a.name AS name, a.birthDate AS birthDate"
+			  + "	, c.name AS typeName, CONCAT(COALESCE(b.firstName,''), ' ', COALESCE(b.lastName,'')) AS ownerName"
+			  + ") "
+			  + "FROM Pet a "
+			  + "	LEFT JOIN a.owner b "
+			  + "	LEFT JOIN a.type c ";
+	
+	final String ORDER_BY_ID = "ORDER BY a.petId DESC";
+	
+    @Query(nativeQuery = false,
+    		value = PET_DTO_QUERY
+    			  + "WHERE a.petId = :petId")
+    PetWithTypeAndOwnerDto findWithTypeAndOwnerByPetId(int petId) throws DataAccessException;
+    
+    @Query(nativeQuery = false,
+    		value = PET_DTO_QUERY
+    			  + ORDER_BY_ID)
+    List<PetWithTypeAndOwnerDto> findAllWithTypeAndOwner() throws DataAccessException;
+
+    Pet findByPetId(int petId) throws DataAccessException;
 
     void save(Pet pet) throws DataAccessException;
-    
-    List<Pet> findAll() throws DataAccessException;
 
 	void delete(Pet pet) throws DataAccessException;
 

@@ -2,13 +2,14 @@ package net.guhya.petclinic.module.owner.api.dto;
 
 import java.time.LocalDate;
 
+import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 @JsonTypeName("Pet")
 public class PetDto {
@@ -19,20 +20,22 @@ public class PetDto {
 
 	@JsonProperty("birthDate")
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-	@NotEmpty
+	@NotNull
 	private LocalDate birthDate;
 
-	@JsonProperty("type")
-	@NotEmpty
-	private String type;
+	@JsonProperty("typeId")
+	@Range(min=1, max=6)
+	private Integer typeId;
 
 	@JsonProperty("petId")
 	private Integer petId;
 
 	@JsonProperty("ownerId")
-	@NotEmpty
+	@Range(min=1)
 	private Integer ownerId;
 
+	public PetDto() {}
+	
 	public String getName() {
 		return name;
 	}
@@ -49,12 +52,12 @@ public class PetDto {
 		this.birthDate = birthDate;
 	}
 
-	public String getType() {
-		return type;
+	public Integer getTypeId() {
+		return typeId;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setTypeId(Integer typeId) {
+		this.typeId = typeId;
 	}
 
 	public Integer getPetId() {

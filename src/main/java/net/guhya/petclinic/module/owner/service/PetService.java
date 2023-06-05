@@ -19,11 +19,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import net.guhya.petclinic.module.owner.api.dto.PetWithTypeAndOwnerDto;
 import net.guhya.petclinic.module.owner.data.Pet;
 import net.guhya.petclinic.module.owner.repository.PetRepository;
 
@@ -38,30 +37,30 @@ public class PetService {
     }
 
 	@Transactional(readOnly = true)
-	public List<Pet> findAll() throws DataAccessException {
-		return petRepository.findAll();
+	public List<PetWithTypeAndOwnerDto> findAllWithTypeAndOwner() throws DataAccessException {
+		return petRepository.findAllWithTypeAndOwner();
+	}
+
+	@Transactional(readOnly = true)
+	public PetWithTypeAndOwnerDto findWithTypeAndOwnerByPetId(int id) throws DataAccessException {
+		PetWithTypeAndOwnerDto pet = petRepository.findWithTypeAndOwnerByPetId(id);
+		return pet;
+	}
+
+	@Transactional(readOnly = true)
+	public Pet findByPetId(int petId) throws DataAccessException {
+		Pet pet = petRepository.findByPetId(petId);
+		return pet;
+	}
+
+	@Transactional
+	public void save(Pet pet) throws DataAccessException {
+		petRepository.save(pet);
 	}
 
 	@Transactional
 	public void delete(Pet pet) throws DataAccessException {
 		petRepository.delete(pet);
-	}
-
-	@Transactional(readOnly = true)
-	public Pet findById(int id) throws DataAccessException {
-		Pet pet = null;
-		try {
-			pet = petRepository.findByPetId(id);
-		} catch (ObjectRetrievalFailureException|EmptyResultDataAccessException e) {
-			// just ignore not found exceptions for Jdbc/Jpa realization
-			return null;
-		}
-		return pet;
-	}
-
-	@Transactional
-	public void savePet(Pet pet) throws DataAccessException {
-		petRepository.save(pet);
 	}
 
 }

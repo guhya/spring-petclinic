@@ -15,9 +15,7 @@
  */
 package net.guhya.petclinic.module.owner.api;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,13 +30,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
-import net.guhya.petclinic.module.owner.api.dto.OwnerAndPetDto;
 import net.guhya.petclinic.module.owner.api.dto.OwnerDto;
 import net.guhya.petclinic.module.owner.api.dto.PetDto;
+import net.guhya.petclinic.module.owner.api.dto.PetWithTypeAndOwnerDto;
 import net.guhya.petclinic.module.owner.api.mapper.OwnerMapper;
+import net.guhya.petclinic.module.owner.api.mapper.PetMapper;
 import net.guhya.petclinic.module.owner.data.Owner;
-import net.guhya.petclinic.module.owner.data.PetType;
+import net.guhya.petclinic.module.owner.data.Pet;
 import net.guhya.petclinic.module.owner.service.OwnerService;
+import net.guhya.petclinic.module.owner.service.PetService;
 
 @RestController
 class OwnerRestController {
@@ -47,10 +47,15 @@ class OwnerRestController {
 	
     private final OwnerService ownerService;
     private final OwnerMapper ownerMapper;
+    private final PetService petService;
+    private final PetMapper petMapper;
     
-    public OwnerRestController(OwnerService ownerService, OwnerMapper ownerMapper) {
+    public OwnerRestController(OwnerService ownerService, OwnerMapper ownerMapper
+    		, PetService petService, PetMapper petMapper) {
 		this.ownerService = ownerService;
 		this.ownerMapper = ownerMapper;
+		this.petService = petService;
+		this.petMapper = petMapper;
 		
 		logger.info("Owner API loaded");
 	}
@@ -67,28 +72,6 @@ class OwnerRestController {
         return new ResponseEntity<>(ownerListDto, HttpStatus.OK);
     }
 	
-	@GetMapping("/owner/pet")
-    public ResponseEntity<List<OwnerAndPetDto>> listOwnersAndTheirPets() {
-        List<Owner> owners = ownerService.findAllOwnersAndTheirPets();
-        List<OwnerAndPetDto> ownerListDto = ownerMapper.toOwnerAndPetDtoList(owners);
-        
-		List<PetType> typeList = ownerService.findPetTypes();
-		Map<Integer, String> typeMap = new HashMap<>();
-		for (PetType type : typeList) {
-			typeMap.put(type.getTypeId(), type.getName());
-		}
-		
-		for (OwnerAndPetDto owner : ownerListDto) {
-			List<PetDto> petList = owner.getPets();
-			for (PetDto pet : petList) {
-				String typeId = pet.getType();
-				pet.setType(typeMap.get(Integer.valueOf(typeId)));
-			}
-		}
-		
-        return new ResponseEntity<>(ownerListDto, HttpStatus.OK);
-    }
-
 	@GetMapping("/owner/{ownerId}")
     public ResponseEntity<OwnerDto> getOwner(@PathVariable Integer ownerId) {
 		OwnerDto ownerDto = ownerService.findByOwnerId(ownerId);
@@ -133,5 +116,56 @@ class OwnerRestController {
 		
         return new ResponseEntity<>(HttpStatus.OK);
     }
+	
+	@GetMapping("/owner/{ownerId}/pet")
+    public ResponseEntity<List<PetWithTypeAndOwnerDto>> listOwnerPets(@PathVariable Integer ownerId) {
+		List<PetWithTypeAndOwnerDto> petListDto = petService.findAllWithTypeAndOwner();
+		
+        return new ResponseEntity<>(petListDto, HttpStatus.OK);
+    }
+	
+	@GetMapping("/owner/{ownerId}/pet/{petId}")
+    public ResponseEntity<PetWithTypeAndOwnerDto> getOwnerPet(@PathVariable Integer petId) {
+		PetWithTypeAndOwnerDto petDto = petService.findWithTypeAndOwnerByPetId(petId);
+        if (petDto == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);        
+        
+        return new ResponseEntity<>(petDto, HttpStatus.OK);
+    }
+	
+	@PostMapping("/owner/{ownerId}/pet")
+    public ResponseEntity<PetDto> addOwnerPet(@Valid @RequestBody PetDto petDto) {
+		if (petDto.getPetId() != null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			
+        Pet pet = petMapper.toPet(petDto);
+        petService.save(pet);
+        PetDto savedDto = petMapper.toPetDto(pet);
+        
+        return new ResponseEntity<>(savedDto, HttpStatus.CREATED);
+    }
+
+	@PutMapping("/owner/{ownerId}/pet")
+    public ResponseEntity<PetDto> updateOwnerPet(@Valid @RequestBody PetDto petDto) {
+		if (petDto.getPetId() == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		
+		Pet existingPet = petService.findByPetId(petDto.getPetId());
+		if (existingPet == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			
+        Pet pet = petMapper.toPet(petDto);
+        petService.save(pet);
+        PetDto savedDto = petMapper.toPetDto(pet);        
+        
+        return new ResponseEntity<>(savedDto, HttpStatus.OK);
+    }
+	
+	@DeleteMapping("/owner/{ownerId}/pet/{petId}")
+    public ResponseEntity<PetDto> deleteOwnerPet(@PathVariable Integer petId) {
+		Pet existingPet = petService.findByPetId(petId);
+		if (existingPet == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		
+		petService.delete(existingPet);
+		
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+	
 	
 }
