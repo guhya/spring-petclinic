@@ -19,14 +19,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.guhya.petclinic.module.owner.api.dto.OwnerDto;
+import net.guhya.petclinic.module.owner.api.dto.OwnerAuditableDto;
 import net.guhya.petclinic.module.owner.data.Owner;
-import net.guhya.petclinic.module.owner.data.PetType;
 import net.guhya.petclinic.module.owner.repository.OwnerRepository;
 
 @Service
@@ -40,50 +37,35 @@ public class OwnerService {
     }
 
 	@Transactional(readOnly = true)
-	public List<OwnerDto> findAll() throws DataAccessException {
-		return ownerRepository.findAll();
+	public List<OwnerAuditableDto> findOwnerAuditableAll() throws DataAccessException {
+		return ownerRepository.findAllOwnerAuditable();
 	}
 
 	@Transactional(readOnly = true)
-	public List<Owner> findAllOwnersAndTheirPets() throws DataAccessException {
-		return ownerRepository.findAllOwnersAndTheirPets();
+	public List<OwnerAuditableDto> findOwnerAuditableByLastName(String lastName) throws DataAccessException {
+		return ownerRepository.findOwnerAuditableByLastName(lastName);
 	}
 
 	@Transactional(readOnly = true)
-	public List<Object[]> findAllOwnersAndPets() throws DataAccessException {
-		return ownerRepository.findAllOwnersAndPets();
-	}
-
-	@Transactional(readOnly = true)
-	public List<PetType> findPetTypes() throws DataAccessException {
-		return ownerRepository.findPetTypes();
-	}
-
-	@Transactional
-	public void delete(Owner owner) throws DataAccessException {
-		ownerRepository.delete(owner);
-	}
-
-	@Transactional(readOnly = true)
-	public OwnerDto findByOwnerId(int id) throws DataAccessException {
-		OwnerDto owner = null;
-		try {
-			owner = ownerRepository.findByOwnerId(id);
-		} catch (ObjectRetrievalFailureException|EmptyResultDataAccessException e) {
-			// just ignore not found exceptions for Jdbc/Jpa realization
-			return null;
-		}
+	public OwnerAuditableDto findOwnerAuditableByOwnerId(int id) throws DataAccessException {
+		OwnerAuditableDto owner = ownerRepository.findOwnerAuditableByOwnerId(id);
 		return owner;
 	}
 
+	@Transactional(readOnly = true)
+	public Owner findByOwnerId(int ownerId) throws DataAccessException {
+		Owner owner = ownerRepository.findByOwnerId(ownerId);
+		return owner;
+	}
+	
 	@Transactional
 	public void save(Owner owner) throws DataAccessException {
 		ownerRepository.save(owner);
 	}
 
-	@Transactional(readOnly = true)
-	public List<OwnerDto> findByLastName(String lastName) throws DataAccessException {
-		return ownerRepository.findByLastName(lastName);
+	@Transactional
+	public void delete(Owner owner) throws DataAccessException {
+		ownerRepository.delete(owner);
 	}
 
 }

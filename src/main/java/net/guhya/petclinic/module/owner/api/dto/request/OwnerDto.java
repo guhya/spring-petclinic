@@ -1,32 +1,30 @@
-package net.guhya.petclinic.module.owner.api.dto;
+package net.guhya.petclinic.module.owner.api.dto.request;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-import net.guhya.petclinic.module.owner.api.dto.request.PetDto;
+import jakarta.validation.constraints.NotEmpty;
 
-@JsonTypeName("OwnerAndPet")
-@JsonPropertyOrder({ "ownerId", "firstName", "lastName", "address", "city", "telephone" })
-public class OwnerAndPetDto {
+@JsonTypeName("Owner")
+public class OwnerDto {
 
 	private Integer ownerId;
+
+	@NotEmpty
 	private String firstName;
+
+	@NotEmpty
 	private String lastName;
+
+	@NotEmpty
 	private String address;
+
+	@NotEmpty
 	private String city;
+
+	@NotEmpty
 	private String telephone;
-	private List<PetDto> pets = new ArrayList<>();
 
-	public Integer getOwnerId() {
-		return ownerId;
-	}
-
-	public void setOwnerId(Integer ownerId) {
-		this.ownerId = ownerId;
-	}
+	public OwnerDto() {}
 
 	public String getFirstName() {
 		return firstName;
@@ -67,13 +65,13 @@ public class OwnerAndPetDto {
 	public void setTelephone(String telephone) {
 		this.telephone = telephone;
 	}
-	
-	public List<PetDto> getPets() {
-		return pets;
+
+	public Integer getOwnerId() {
+		return ownerId;
 	}
 
-	public void setPets(List<PetDto> pets) {
-		this.pets = pets;
-	}	
+	public void setOwnerId(Integer ownerId) {
+		this.ownerId = ownerId;
+	}
 
 }

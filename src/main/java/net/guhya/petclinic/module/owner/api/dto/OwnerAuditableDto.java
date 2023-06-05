@@ -2,45 +2,24 @@ package net.guhya.petclinic.module.owner.api.dto;
 
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-import jakarta.validation.constraints.NotEmpty;
 import net.guhya.petclinic.module.common.api.SimpleAuditDto;
 
-@JsonTypeName("Owner")
-@JsonPropertyOrder({ "ownerId", "firstName", "lastName", "address", "city", "telephone", 
-	"createdBy", "createdAt", "modifiedBy", "modifiedAt" })
-public class OwnerDto extends SimpleAuditDto {
+@JsonTypeName("OwnerAuditable")
+@JsonPropertyOrder({ "ownerId", "firstName", "lastName", "address", "city", "telephone", "createdBy", "createdAt", "modifiedBy", "modifiedAt" })
+public class OwnerAuditableDto extends SimpleAuditDto {
 
-	@JsonProperty("firstName")
-	@NotEmpty
-	private String firstName;
-
-	@JsonProperty("lastName")
-	@NotEmpty
-	private String lastName;
-
-	@JsonProperty("address")
-	@NotEmpty
-	private String address;
-
-	@JsonProperty("city")
-	@NotEmpty
-	private String city;
-
-	@JsonProperty("telephone")
-	@NotEmpty
-	private String telephone;
-
-	@JsonProperty("ownerId")
 	private Integer ownerId;
+	private String firstName;
+	private String lastName;
+	private String address;
+	private String city;
+	private String telephone;
 		
-	public OwnerDto() {}
-
-	public OwnerDto(@NotEmpty String firstName, @NotEmpty String lastName, @NotEmpty String address, @NotEmpty String city,
-			@NotEmpty String telephone, Integer ownerId, String createdBy, LocalDateTime createdAt, String modifiedBy, LocalDateTime modifiedAt) {
+	public OwnerAuditableDto(String firstName,  String lastName,  String address,  String city, String telephone, Integer ownerId, 
+			String createdBy, LocalDateTime createdAt, String modifiedBy, LocalDateTime modifiedAt) {
 		super(createdBy, createdAt, modifiedBy, modifiedAt);
 		this.firstName = firstName;
 		this.lastName = lastName;

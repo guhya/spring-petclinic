@@ -47,6 +47,12 @@ public interface PetRepository extends Repository<Pet, Integer> {
     			  + ORDER_BY_ID)
     List<PetWithTypeAndOwnerDto> findAllWithTypeAndOwner() throws DataAccessException;
 
+    @Query(nativeQuery = false,
+    		value = PET_DTO_QUERY
+    			  + "WHERE b.ownerId = :ownerId "
+    			  + ORDER_BY_ID)
+    List<PetWithTypeAndOwnerDto> findAllWithTypeAndOwnerByOwnerId(int ownerId) throws DataAccessException;
+
     Pet findByPetId(int petId) throws DataAccessException;
 
     void save(Pet pet) throws DataAccessException;

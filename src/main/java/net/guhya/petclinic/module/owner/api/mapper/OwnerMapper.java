@@ -5,7 +5,7 @@ import java.util.List;
 import org.mapstruct.Mapper;
 
 import net.guhya.petclinic.module.owner.api.dto.OwnerAndPetDto;
-import net.guhya.petclinic.module.owner.api.dto.OwnerDto;
+import net.guhya.petclinic.module.owner.api.dto.request.OwnerDto;
 import net.guhya.petclinic.module.owner.data.Owner;
 
 /**

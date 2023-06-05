@@ -30,9 +30,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
-import net.guhya.petclinic.module.owner.api.dto.OwnerDto;
-import net.guhya.petclinic.module.owner.api.dto.PetDto;
+import net.guhya.petclinic.module.owner.api.dto.OwnerAuditableDto;
 import net.guhya.petclinic.module.owner.api.dto.PetWithTypeAndOwnerDto;
+import net.guhya.petclinic.module.owner.api.dto.request.OwnerDto;
+import net.guhya.petclinic.module.owner.api.dto.request.PetDto;
 import net.guhya.petclinic.module.owner.api.mapper.OwnerMapper;
 import net.guhya.petclinic.module.owner.api.mapper.PetMapper;
 import net.guhya.petclinic.module.owner.data.Owner;
@@ -61,23 +62,23 @@ class OwnerRestController {
 	}
 	
 	@GetMapping("/owner")
-    public ResponseEntity<List<OwnerDto>> listOwners(String lastName) {
-		List<OwnerDto> ownerListDto;
+    public ResponseEntity<List<OwnerAuditableDto>> listOwners(String lastName) {
+		List<OwnerAuditableDto> ownerListDto;
         if (lastName != null) {
-        	ownerListDto = ownerService.findByLastName(lastName);
+        	ownerListDto = ownerService.findOwnerAuditableByLastName(lastName);
         } else {
-        	ownerListDto = ownerService.findAll();
+        	ownerListDto = ownerService.findOwnerAuditableAll();
         }
         
         return new ResponseEntity<>(ownerListDto, HttpStatus.OK);
     }
 	
 	@GetMapping("/owner/{ownerId}")
-    public ResponseEntity<OwnerDto> getOwner(@PathVariable Integer ownerId) {
-		OwnerDto ownerDto = ownerService.findByOwnerId(ownerId);
-        if (ownerDto == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);        
+    public ResponseEntity<OwnerAuditableDto> getOwner(@PathVariable Integer ownerId) {
+		OwnerAuditableDto ownerAuditableDto = ownerService.findOwnerAuditableByOwnerId(ownerId);
+        if (ownerAuditableDto == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);        
         
-        return new ResponseEntity<>(ownerDto, HttpStatus.OK);
+        return new ResponseEntity<>(ownerAuditableDto, HttpStatus.OK);
     }
 	
 	@PostMapping("/owner")
@@ -95,31 +96,29 @@ class OwnerRestController {
     public ResponseEntity<OwnerDto> updateOwner(@Valid @RequestBody OwnerDto ownerDto) {
 		if (ownerDto.getOwnerId() == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		
-		OwnerDto existingOwnerDto = ownerService.findByOwnerId(ownerDto.getOwnerId());
-		if (existingOwnerDto == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		OwnerAuditableDto existingOwnerAuditableDto = ownerService.findOwnerAuditableByOwnerId(ownerDto.getOwnerId());
+		if (existingOwnerAuditableDto == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			
         Owner owner = ownerMapper.toOwner(ownerDto);
         ownerService.save(owner);
+        OwnerDto savedDto = ownerMapper.toOwnerDto(owner);
         
-		existingOwnerDto = ownerService.findByOwnerId(ownerDto.getOwnerId());
-        
-        return new ResponseEntity<>(existingOwnerDto, HttpStatus.OK);
+        return new ResponseEntity<>(savedDto, HttpStatus.OK);
     }
 	
 	@DeleteMapping("/owner/{ownerId}")
     public ResponseEntity<OwnerDto> deleteOwner(@PathVariable Integer ownerId) {
-		OwnerDto existingOwnerDto = ownerService.findByOwnerId(ownerId);
-		if (existingOwnerDto == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		Owner existingOwner = ownerService.findByOwnerId(ownerId);
+		if (existingOwner == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		
-        Owner owner = ownerMapper.toOwner(existingOwnerDto);
-		ownerService.delete(owner);
+		ownerService.delete(existingOwner);
 		
         return new ResponseEntity<>(HttpStatus.OK);
     }
 	
 	@GetMapping("/owner/{ownerId}/pet")
     public ResponseEntity<List<PetWithTypeAndOwnerDto>> listOwnerPets(@PathVariable Integer ownerId) {
-		List<PetWithTypeAndOwnerDto> petListDto = petService.findAllWithTypeAndOwner();
+		List<PetWithTypeAndOwnerDto> petListDto = petService.findAllWithTypeAndOwnerByOwnerId(ownerId);
 		
         return new ResponseEntity<>(petListDto, HttpStatus.OK);
     }

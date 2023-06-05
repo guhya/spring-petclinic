@@ -42,9 +42,14 @@ public class PetService {
 	}
 
 	@Transactional(readOnly = true)
-	public PetWithTypeAndOwnerDto findWithTypeAndOwnerByPetId(int id) throws DataAccessException {
-		PetWithTypeAndOwnerDto pet = petRepository.findWithTypeAndOwnerByPetId(id);
+	public PetWithTypeAndOwnerDto findWithTypeAndOwnerByPetId(int petId) throws DataAccessException {
+		PetWithTypeAndOwnerDto pet = petRepository.findWithTypeAndOwnerByPetId(petId);
 		return pet;
+	}
+
+	@Transactional(readOnly = true)
+	public List<PetWithTypeAndOwnerDto> findAllWithTypeAndOwnerByOwnerId(int ownerId) throws DataAccessException {
+		return petRepository.findAllWithTypeAndOwnerByOwnerId(ownerId);
 	}
 
 	@Transactional(readOnly = true)
