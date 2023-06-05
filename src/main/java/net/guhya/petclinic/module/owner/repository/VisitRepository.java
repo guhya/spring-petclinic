@@ -22,13 +22,18 @@ import org.springframework.data.repository.Repository;
 
 import net.guhya.petclinic.module.owner.data.Visit;
 
-/**
- * Repository class for <code>Visit</code> domain objects All method names are compliant with Spring Data naming
- * conventions so this interface can easily be extended for Spring Data See here: http://static.springsource.org/spring-data/jpa/docs/current/reference/html/jpa.repositories.html#jpa.query-methods.query-creation
- */
 public interface VisitRepository extends Repository<Visit, Integer>{
 
-    void save(Visit visit) throws DataAccessException;
+	final String QUERY = ""
+			  + "SELECT new net.guhya.petclinic.module.owner.api.dto.PetWithTypeAndOwnerDto("
+			  + "	a.petId AS petId, a.name AS name, a.birthDate AS birthDate"
+			  + "	, c.name AS typeName, CONCAT(COALESCE(b.firstName,''), ' ', COALESCE(b.lastName,'')) AS ownerName"
+			  + ") "
+			  + "FROM Pet a "
+			  + "	LEFT JOIN a.owner b "
+			  + "	LEFT JOIN a.type c ";
+
+	void save(Visit visit) throws DataAccessException;
 
     List<Visit> findByPetPetId(Integer petId);
     

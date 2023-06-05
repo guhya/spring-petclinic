@@ -1,16 +1,39 @@
-package net.guhya.petclinic.module.owner.api.dto;
+package net.guhya.petclinic.module.owner.api.dto.request;
 
 import java.time.LocalDate;
 
+import org.hibernate.validator.constraints.Range;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.fasterxml.jackson.annotation.JsonTypeName;
+
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 @JsonTypeName("Visit")
 public class VisitDto {
 
 	private Integer visitId;
-	private Integer petId;
+
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+	@NotNull
 	private LocalDate date;
+	
+	@NotEmpty
 	private String description;
+	
+	@Range(min=1)
+	private Integer petId;
+
+	public VisitDto() {}
+	
+	public Integer getVisitId() {
+		return visitId;
+	}
+
+	public void setVisitId(Integer visitId) {
+		this.visitId = visitId;
+	}
 
 	public LocalDate getDate() {
 		return date;
@@ -26,14 +49,6 @@ public class VisitDto {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public Integer getVisitId() {
-		return visitId;
-	}
-
-	public void setVisitId(Integer visitId) {
-		this.visitId = visitId;
 	}
 
 	public Integer getPetId() {

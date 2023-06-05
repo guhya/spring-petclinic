@@ -26,7 +26,7 @@ import net.guhya.petclinic.module.owner.data.Pet;
 
 public interface PetRepository extends Repository<Pet, Integer> {
 
-	final String PET_DTO_QUERY = ""
+	final String QUERY = ""
 			  + "SELECT new net.guhya.petclinic.module.owner.api.dto.PetWithTypeAndOwnerDto("
 			  + "	a.petId AS petId, a.name AS name, a.birthDate AS birthDate"
 			  + "	, c.name AS typeName, CONCAT(COALESCE(b.firstName,''), ' ', COALESCE(b.lastName,'')) AS ownerName"
@@ -38,17 +38,17 @@ public interface PetRepository extends Repository<Pet, Integer> {
 	final String ORDER_BY_ID = "ORDER BY a.petId DESC";
 	
     @Query(nativeQuery = false,
-    		value = PET_DTO_QUERY
+    		value = QUERY
     			  + "WHERE a.petId = :petId")
     PetWithTypeAndOwnerDto findWithTypeAndOwnerByPetId(int petId) throws DataAccessException;
     
     @Query(nativeQuery = false,
-    		value = PET_DTO_QUERY
+    		value = QUERY
     			  + ORDER_BY_ID)
     List<PetWithTypeAndOwnerDto> findAllWithTypeAndOwner() throws DataAccessException;
 
     @Query(nativeQuery = false,
-    		value = PET_DTO_QUERY
+    		value = QUERY
     			  + "WHERE b.ownerId = :ownerId "
     			  + ORDER_BY_ID)
     List<PetWithTypeAndOwnerDto> findAllWithTypeAndOwnerByOwnerId(int ownerId) throws DataAccessException;

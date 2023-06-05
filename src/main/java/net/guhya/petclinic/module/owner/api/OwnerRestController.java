@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import net.guhya.petclinic.module.owner.api.dto.OwnerAuditableDto;
+import net.guhya.petclinic.module.owner.api.dto.OwnerAuditableWithPetsDto;
 import net.guhya.petclinic.module.owner.api.dto.PetWithTypeAndOwnerDto;
 import net.guhya.petclinic.module.owner.api.dto.request.OwnerDto;
 import net.guhya.petclinic.module.owner.api.dto.request.PetDto;
@@ -81,6 +82,16 @@ class OwnerRestController {
         return new ResponseEntity<>(ownerAuditableDto, HttpStatus.OK);
     }
 	
+	@GetMapping("/ownerWithPets/{ownerId}")
+    public ResponseEntity<OwnerAuditableWithPetsDto> getOwnerWithPets(@PathVariable Integer ownerId) {
+		OwnerAuditableWithPetsDto ownerAuditableDto = ownerService.findOwnerAuditableWithPetsByOwnerId(ownerId);
+        if (ownerAuditableDto == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);    
+        
+        ownerAuditableDto.setPets(petService.findAllWithTypeAndOwnerByOwnerId(ownerId));
+        
+        return new ResponseEntity<>(ownerAuditableDto, HttpStatus.OK);
+    }
+
 	@PostMapping("/owner")
     public ResponseEntity<OwnerDto> addOwner(@Valid @RequestBody OwnerDto ownerDto) {
 		if (ownerDto.getOwnerId() != null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

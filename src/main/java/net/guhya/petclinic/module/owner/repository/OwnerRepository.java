@@ -22,32 +22,45 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
 import net.guhya.petclinic.module.owner.api.dto.OwnerAuditableDto;
+import net.guhya.petclinic.module.owner.api.dto.OwnerAuditableWithPetsDto;
 import net.guhya.petclinic.module.owner.data.Owner;
 
 public interface OwnerRepository extends Repository<Owner, Integer> {
 	
-	final String OWNER_DTO_QUERY = ""
+	final String QUERY = ""
 			  + "SELECT new net.guhya.petclinic.module.owner.api.dto.OwnerAuditableDto("
 			  + "	a.firstName, a.lastName, a.address, a.city, a.telephone, a.ownerId"
 			  + "	, a.createdBy, a.createdAt, a.modifiedBy, a.modifiedAt "
 			  + ") "
 			  + "FROM Owner a ";
 	
+	final String QUERY_WITH_PETS = ""
+			  + "SELECT new net.guhya.petclinic.module.owner.api.dto.OwnerAuditableWithPetsDto("
+			  + "	a.firstName, a.lastName, a.address, a.city, a.telephone, a.ownerId"
+			  + "	, a.createdBy, a.createdAt, a.modifiedBy, a.modifiedAt "
+			  + ") "
+			  + "FROM Owner a ";
+
 	final String ORDER_BY_ID = "ORDER BY a.ownerId DESC";
 
     @Query(nativeQuery = false,
-    		value = OWNER_DTO_QUERY
+    		value = QUERY
     			  + "WHERE a.lastName LIKE %:lastName% "
     			  + ORDER_BY_ID)
 	List<OwnerAuditableDto> findOwnerAuditableByLastName(String lastName) throws DataAccessException;
 
     @Query(nativeQuery = false,
-    		value = OWNER_DTO_QUERY
-    			  + "WHERE a.ownerId = :id ")
-    OwnerAuditableDto findOwnerAuditableByOwnerId(int id) throws DataAccessException;
+    		value = QUERY
+    			  + "WHERE a.ownerId = :ownerId ")
+    OwnerAuditableDto findOwnerAuditableByOwnerId(int ownerId) throws DataAccessException;
 
     @Query(nativeQuery = false,
-    		value = OWNER_DTO_QUERY
+    		value = QUERY_WITH_PETS
+    			  + "WHERE a.ownerId = :ownerId ")
+    OwnerAuditableWithPetsDto findOwnerAuditableWithPetsByOwnerId(int ownerId) throws DataAccessException;
+
+    @Query(nativeQuery = false,
+    		value = QUERY
     			  + ORDER_BY_ID)
     List<OwnerAuditableDto> findAllOwnerAuditable() throws DataAccessException;
 	
