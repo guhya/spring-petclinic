@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,13 +39,13 @@ public class OwnerService {
     }
 
 	@Transactional(readOnly = true)
-	public List<OwnerAuditableDto> findOwnerAuditableAll() throws DataAccessException {
-		return ownerRepository.findAllOwnerAuditable();
+	public List<OwnerAuditableDto> findAllOwnerAuditable(Pageable pageable) throws DataAccessException {
+		return ownerRepository.findAllOwnerAuditable(pageable);
 	}
 
 	@Transactional(readOnly = true)
-	public List<OwnerAuditableDto> findOwnerAuditableByLastName(String lastName) throws DataAccessException {
-		return ownerRepository.findOwnerAuditableByLastName(lastName);
+	public List<OwnerAuditableDto> findOwnerAuditableByLastName(String lastName, Pageable pageable) throws DataAccessException {
+		return ownerRepository.findOwnerAuditableByLastName(lastName, pageable);
 	}
 
 	@Transactional(readOnly = true)

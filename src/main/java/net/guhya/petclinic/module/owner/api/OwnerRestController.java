@@ -19,6 +19,8 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import net.guhya.petclinic.module.owner.api.dto.OwnerAuditableDto;
 import net.guhya.petclinic.module.owner.api.dto.OwnerAuditableWithPetsDto;
 import net.guhya.petclinic.module.owner.api.dto.PetWithTypeAndOwnerDto;
@@ -63,12 +66,20 @@ class OwnerRestController {
 	}
 	
 	@GetMapping("/owner")
-    public ResponseEntity<List<OwnerAuditableDto>> listOwners(String lastName) {
+    public ResponseEntity<List<OwnerAuditableDto>> listOwners(String lastName, 
+    		@Min(1) Integer page, 
+    		@Min(1) Integer pageSize) {
 		List<OwnerAuditableDto> ownerListDto;
+		Pageable pageable = PageRequest.of(0, 10000);
+    	if (page != null && pageSize != null) {
+    		page = page - 1;
+    		pageable = PageRequest.of(page, pageSize);
+    	}
+		
         if (lastName != null) {
-        	ownerListDto = ownerService.findOwnerAuditableByLastName(lastName);
+        	ownerListDto = ownerService.findOwnerAuditableByLastName(lastName, pageable);
         } else {
-        	ownerListDto = ownerService.findOwnerAuditableAll();
+        	ownerListDto = ownerService.findAllOwnerAuditable(pageable);
         }
         
         return new ResponseEntity<>(ownerListDto, HttpStatus.OK);

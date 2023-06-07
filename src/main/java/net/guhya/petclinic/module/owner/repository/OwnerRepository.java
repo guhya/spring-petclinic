@@ -18,6 +18,7 @@ package net.guhya.petclinic.module.owner.repository;
 import java.util.List;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
@@ -45,9 +46,14 @@ public interface OwnerRepository extends Repository<Owner, Integer> {
 
     @Query(nativeQuery = false,
     		value = QUERY
+    			  + ORDER_BY_ID)
+    List<OwnerAuditableDto> findAllOwnerAuditable(Pageable pageable) throws DataAccessException;
+
+    @Query(nativeQuery = false,
+    		value = QUERY
     			  + "WHERE a.lastName LIKE %:lastName% "
     			  + ORDER_BY_ID)
-	List<OwnerAuditableDto> findOwnerAuditableByLastName(String lastName) throws DataAccessException;
+	List<OwnerAuditableDto> findOwnerAuditableByLastName(String lastName, Pageable pageable) throws DataAccessException;
 
     @Query(nativeQuery = false,
     		value = QUERY
@@ -58,11 +64,6 @@ public interface OwnerRepository extends Repository<Owner, Integer> {
     		value = QUERY_WITH_PETS
     			  + "WHERE a.ownerId = :ownerId ")
     OwnerAuditableWithPetsDto findOwnerAuditableWithPetsByOwnerId(int ownerId) throws DataAccessException;
-
-    @Query(nativeQuery = false,
-    		value = QUERY
-    			  + ORDER_BY_ID)
-    List<OwnerAuditableDto> findAllOwnerAuditable() throws DataAccessException;
 	
     Owner findByOwnerId(int ownerId) throws DataAccessException;
 

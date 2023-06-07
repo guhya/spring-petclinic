@@ -20,6 +20,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,20 +40,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @ControllerAdvice
 public class ExceptionControllerAdvice {
-
+	
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> exception(Exception e) {
-        ObjectMapper mapper = new ObjectMapper();
         ErrorInfo errorInfo = new ErrorInfo(e);
-        String respJSONstring = "{}";
-        try {
-            respJSONstring = mapper.writeValueAsString(errorInfo);
-        } catch (JsonProcessingException e1) {
-            e1.printStackTrace();
-        }
-        
-        e.printStackTrace();
-        return ResponseEntity.internalServerError().body(respJSONstring);
+        return prepareResponse(errorInfo, HttpStatus.BAD_REQUEST);        
     }
 
     /**
@@ -70,16 +63,56 @@ public class ExceptionControllerAdvice {
         if (bindingResult.hasErrors()) {
             errors.addAllErrors(bindingResult);
         }
-        return new ResponseEntity<>(errors.toJSON(), HttpStatus.BAD_REQUEST);
+        
+        return jsonResponse(errors.toJSON(), HttpStatus.BAD_REQUEST);
+    }
+    
+    /**
+     * Handles exception thrown by Bean Validation on controller methods parameters
+     *
+     * @param ex      The thrown exception
+     * @param request the current web request
+     * @return an empty response entity
+     */
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @ResponseStatus(code = BAD_REQUEST)
+    @ResponseBody
+    public ResponseEntity<String> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex, WebRequest request) {
+        ErrorInfo errorInfo = new ErrorInfo("ERR0002", "Method argument type mismatch");
+        return prepareResponse(errorInfo, HttpStatus.BAD_REQUEST);        
+    }
+    
+    private ResponseEntity<String> prepareResponse(ErrorInfo errorInfo, HttpStatus statusCode) {
+        ObjectMapper mapper = new ObjectMapper();
+        String respJSONstring = "{}";
+        try {
+            respJSONstring = mapper.writeValueAsString(errorInfo);
+        } catch (JsonProcessingException e1) {
+            e1.printStackTrace();
+        }
+
+        return jsonResponse(respJSONstring, statusCode);
     }
 
-    private class ErrorInfo {
-        public final String className;
-        public final String exMessage;
+    private ResponseEntity<String> jsonResponse(String json, HttpStatus statusCode) {
+        final HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<>(json, httpHeaders, statusCode);
+    }
+
+    public static class ErrorInfo {
+        public final String code;
+        public final String message;
 
         public ErrorInfo(Exception ex) {
-            this.className = ex.getClass().getName();
-            this.exMessage = ex.getLocalizedMessage();
+            this.code = "ERR0001";
+            this.message = ex.getLocalizedMessage();
         }
+        
+        public ErrorInfo(String code, String message) {
+            this.code = code;
+            this.message = message;
+        }
+        
     }
 }
