@@ -42,8 +42,8 @@ public class PetService {
 	}
 
 	@Transactional(readOnly = true)
-	public PetWithTypeAndOwnerDto findWithTypeAndOwnerByPetId(int petId) throws DataAccessException {
-		PetWithTypeAndOwnerDto pet = petRepository.findWithTypeAndOwnerByPetId(petId);
+	public PetWithTypeAndOwnerDto findWithTypeAndOwnerByPetId(int ownerId, int petId) throws DataAccessException {
+		PetWithTypeAndOwnerDto pet = petRepository.findWithTypeAndOwnerByPetId(ownerId, petId);
 		return pet;
 	}
 

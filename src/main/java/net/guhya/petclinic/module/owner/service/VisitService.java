@@ -15,15 +15,14 @@
  */
 package net.guhya.petclinic.module.owner.service;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import net.guhya.petclinic.module.owner.api.dto.VisitWithPetDto;
 import net.guhya.petclinic.module.owner.data.Visit;
 import net.guhya.petclinic.module.owner.repository.VisitRepository;
 
@@ -38,30 +37,29 @@ public class VisitService {
     }
 
 	@Transactional(readOnly = true)
-	public Collection<Visit> findAll() throws DataAccessException {
-		return visitRepository.findAll();
-	}
-
-	@Transactional
-	public void delete(Visit visit) throws DataAccessException {
-		visitRepository.delete(visit);
+	public List<VisitWithPetDto> findAllByPetId(Integer petId) throws DataAccessException {
+		return visitRepository.findAllByPetId(petId);
 	}
 
 	@Transactional(readOnly = true)
-	public Visit findByVisitId(int id) throws DataAccessException {
-		Visit visit = null;
-		try {
-			visit = visitRepository.findByVisitId(id);
-		} catch (ObjectRetrievalFailureException|EmptyResultDataAccessException e) {
-			// just ignore not found exceptions for Jdbc/Jpa realization
-			return null;
-		}
+	public Visit findByVisitId(int visitId) throws DataAccessException {
+		Visit visit = visitRepository.findByVisitId(visitId);
+		return visit;
+	}
+
+	@Transactional(readOnly = true)
+	public Visit findByPetIdAndVisitId(int petId, int visitId) throws DataAccessException {
+		Visit visit = visitRepository.findByPetPetIdAndVisitId(petId, visitId);
 		return visit;
 	}
 
 	@Transactional
-	public void saveVisit(Visit visit) throws DataAccessException {
+	public void save(Visit visit) throws DataAccessException {
 		visitRepository.save(visit);
 	}
-
+	
+	@Transactional
+	public void delete(Visit visit) throws DataAccessException {
+		visitRepository.delete(visit);
+	}
 }

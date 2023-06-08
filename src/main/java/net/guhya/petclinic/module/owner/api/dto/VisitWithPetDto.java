@@ -5,12 +5,22 @@ import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 @JsonTypeName("Visit")
-public class VisitDto {
+public class VisitWithPetDto {
 
 	private Integer visitId;
 	private Integer petId;
+	private String petName;
 	private LocalDate date;
 	private String description;
+
+	public VisitWithPetDto(Integer visitId, Integer petId, String petName, LocalDate date, String description) {
+		super();
+		this.visitId = visitId;
+		this.petId = petId;
+		this.petName = petName;
+		this.date = date;
+		this.description = description;
+	}
 
 	public LocalDate getDate() {
 		return date;
@@ -42,6 +52,14 @@ public class VisitDto {
 
 	public void setPetId(Integer petId) {
 		this.petId = petId;
+	}
+
+	public String getPetName() {
+		return petName;
+	}
+
+	public void setPetName(String petName) {
+		this.petName = petName;
 	}
 
 }

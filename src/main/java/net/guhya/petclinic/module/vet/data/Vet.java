@@ -52,7 +52,8 @@ public class Vet {
 	}
 
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "vet_specialty", joinColumns = @JoinColumn(name = "vet_id"),
+	@JoinTable(name = "vet_specialty", 
+			joinColumns = @JoinColumn(name = "vet_id"),
 			inverseJoinColumns = @JoinColumn(name = "specialty_id"))
 	private List<Specialty> specialties;
 

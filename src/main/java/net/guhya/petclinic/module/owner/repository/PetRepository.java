@@ -39,8 +39,8 @@ public interface PetRepository extends Repository<Pet, Integer> {
 	
     @Query(nativeQuery = false,
     		value = QUERY
-    			  + "WHERE a.petId = :petId")
-    PetWithTypeAndOwnerDto findWithTypeAndOwnerByPetId(int petId) throws DataAccessException;
+    			  + "WHERE b.ownerId = :ownerId AND a.petId = :petId")
+    PetWithTypeAndOwnerDto findWithTypeAndOwnerByPetId(int ownerId, int petId) throws DataAccessException;
     
     @Query(nativeQuery = false,
     		value = QUERY

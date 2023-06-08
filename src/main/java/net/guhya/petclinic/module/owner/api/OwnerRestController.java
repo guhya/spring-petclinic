@@ -36,14 +36,19 @@ import jakarta.validation.constraints.Min;
 import net.guhya.petclinic.module.owner.api.dto.OwnerAuditableDto;
 import net.guhya.petclinic.module.owner.api.dto.OwnerAuditableWithPetsDto;
 import net.guhya.petclinic.module.owner.api.dto.PetWithTypeAndOwnerDto;
+import net.guhya.petclinic.module.owner.api.dto.VisitWithPetDto;
 import net.guhya.petclinic.module.owner.api.dto.request.OwnerDto;
 import net.guhya.petclinic.module.owner.api.dto.request.PetDto;
+import net.guhya.petclinic.module.owner.api.dto.request.VisitDto;
 import net.guhya.petclinic.module.owner.api.mapper.OwnerMapper;
 import net.guhya.petclinic.module.owner.api.mapper.PetMapper;
+import net.guhya.petclinic.module.owner.api.mapper.VisitMapper;
 import net.guhya.petclinic.module.owner.data.Owner;
 import net.guhya.petclinic.module.owner.data.Pet;
+import net.guhya.petclinic.module.owner.data.Visit;
 import net.guhya.petclinic.module.owner.service.OwnerService;
 import net.guhya.petclinic.module.owner.service.PetService;
+import net.guhya.petclinic.module.owner.service.VisitService;
 
 @RestController
 class OwnerRestController {
@@ -54,13 +59,18 @@ class OwnerRestController {
     private final OwnerMapper ownerMapper;
     private final PetService petService;
     private final PetMapper petMapper;
+    private final VisitService visitService;
+    private final VisitMapper visitMapper;
     
     public OwnerRestController(OwnerService ownerService, OwnerMapper ownerMapper
-    		, PetService petService, PetMapper petMapper) {
+    		, PetService petService, PetMapper petMapper
+    		, VisitService visitService, VisitMapper visitMapper) {
 		this.ownerService = ownerService;
 		this.ownerMapper = ownerMapper;
 		this.petService = petService;
 		this.petMapper = petMapper;
+		this.visitService = visitService;
+		this.visitMapper = visitMapper;
 		
 		logger.info("Owner API loaded");
 	}
@@ -138,6 +148,12 @@ class OwnerRestController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 	
+	
+	/**
+	 * List all pet belonging to an owner
+	 * @param ownerId the owner
+	 * @return owner's pets
+	 */
 	@GetMapping("/owner/{ownerId}/pet")
     public ResponseEntity<List<PetWithTypeAndOwnerDto>> listOwnerPets(@PathVariable Integer ownerId) {
 		List<PetWithTypeAndOwnerDto> petListDto = petService.findAllWithTypeAndOwnerByOwnerId(ownerId);
@@ -146,8 +162,8 @@ class OwnerRestController {
     }
 	
 	@GetMapping("/owner/{ownerId}/pet/{petId}")
-    public ResponseEntity<PetWithTypeAndOwnerDto> getOwnerPet(@PathVariable Integer petId) {
-		PetWithTypeAndOwnerDto petDto = petService.findWithTypeAndOwnerByPetId(petId);
+    public ResponseEntity<PetWithTypeAndOwnerDto> getOwnerPet(@PathVariable Integer ownerId, @PathVariable Integer petId) {
+		PetWithTypeAndOwnerDto petDto = petService.findWithTypeAndOwnerByPetId(ownerId, petId);
         if (petDto == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);        
         
         return new ResponseEntity<>(petDto, HttpStatus.OK);
@@ -188,5 +204,49 @@ class OwnerRestController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 	
+	/**
+	 * List all pet's visits
+	 * @param ownerId the owner of the pet
+	 * @param petId the pet doing the visit
+	 * @return visit list
+	 */
+	@GetMapping("/owner/{ownerId}/pet/{petId}/visit")
+    public ResponseEntity<List<VisitWithPetDto>> listOwnerPetVisits(@PathVariable Integer ownerId, 
+    		@PathVariable Integer petId) {
+		
+		PetWithTypeAndOwnerDto petDto = petService.findWithTypeAndOwnerByPetId(ownerId, petId);
+        if (petDto == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);        
+		
+		List<VisitWithPetDto> visitListDto = visitService.findAllByPetId(petId);
+		
+        return new ResponseEntity<>(visitListDto, HttpStatus.OK);
+    }
+	
+	@PostMapping("/owner/{ownerId}/pet/{petId}/visit")
+    public ResponseEntity<VisitDto> addOwnerPetVisit(@Valid @RequestBody VisitDto visitDto) {
+		if (visitDto.getVisitId() != null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			
+        Visit visit = visitMapper.toVisit(visitDto);
+        visitService.save(visit);
+        VisitDto savedDto = visitMapper.toVisitDto(visit);
+        
+        return new ResponseEntity<>(savedDto, HttpStatus.CREATED);
+    }
+
+	@DeleteMapping("/owner/{ownerId}/pet/{petId}/visit/{visitId}")
+    public ResponseEntity<VisitDto> deleteOwnerPetVisit(@PathVariable Integer ownerId, 
+    		@PathVariable Integer petId, @PathVariable Integer visitId) {
+		// Check if there is existing pet with petId and ownerId
+		PetWithTypeAndOwnerDto petDto = petService.findWithTypeAndOwnerByPetId(ownerId, petId);
+        if (petDto == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);        
+		
+        // Check if there is a visit with petId and visit id
+		Visit existingVisit = visitService.findByPetIdAndVisitId(petId, visitId);
+		if (existingVisit == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		
+		visitService.delete(existingVisit);
+		
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 	
 }

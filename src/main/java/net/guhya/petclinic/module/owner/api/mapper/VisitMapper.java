@@ -1,11 +1,9 @@
 package net.guhya.petclinic.module.owner.api.mapper;
 
-import java.util.List;
-
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import net.guhya.petclinic.module.owner.api.dto.VisitDto;
+import net.guhya.petclinic.module.owner.api.dto.request.VisitDto;
 import net.guhya.petclinic.module.owner.data.Visit;
 
 /**
@@ -14,11 +12,9 @@ import net.guhya.petclinic.module.owner.data.Visit;
 @Mapper
 public interface VisitMapper {
     
+    @Mapping(source = "petId", target = "pet.petId")
 	Visit toVisit(VisitDto visitDto);
 
     @Mapping(source = "pet.petId", target = "petId")
     VisitDto toVisitDto(Visit visit);
-
-    List<VisitDto> toVisitsDto(List<Visit> visits);
-
 }
