@@ -14,7 +14,6 @@ public class VetWithSpecialtiesDto {
 	private List<VetSpecialtyWithNameDto> specialties = new ArrayList<>();
 	
 	public VetWithSpecialtiesDto(Integer vetId, String firstName, String lastName) {
-		super();
 		this.vetId = vetId;
 		this.firstName = firstName;
 		this.lastName = lastName;

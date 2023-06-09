@@ -1,13 +1,21 @@
 package net.guhya.petclinic.module.vet.projection;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 @JsonTypeName("VetSpecialty")
 public class VetSpecialtyWithNameDto {
 	
+	@JsonIgnore
 	private Integer vetId;
 	private Integer specialtyId;
-	private Integer specialtyName;
+	private String specialtyName;
+
+	public VetSpecialtyWithNameDto(Integer vetId, Integer specialtyId, String specialtyName) {
+		this.vetId = vetId;
+		this.specialtyId = specialtyId;
+		this.specialtyName = specialtyName;
+	}
 
 	public Integer getVetId() {
 		return vetId;
@@ -25,11 +33,11 @@ public class VetSpecialtyWithNameDto {
 		this.specialtyId = specialtyId;
 	}
 
-	public Integer getSpecialtyName() {
+	public String getSpecialtyName() {
 		return specialtyName;
 	}
 
-	public void setSpecialtyName(Integer specialtyName) {
+	public void setSpecialtyName(String specialtyName) {
 		this.specialtyName = specialtyName;
 	}	
 		

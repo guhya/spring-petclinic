@@ -16,7 +16,6 @@
 package net.guhya.petclinic.module.vet.data;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -87,7 +86,7 @@ public class Vet {
 
 	@XmlElement
 	public List<VetSpecialty> getSpecialties() {
-		return Collections.unmodifiableList(getVetSpecialtiesInternal());
+		return getVetSpecialtiesInternal();
 	}
 
 	public int getNrOfVetSpecialties() {

@@ -96,9 +96,9 @@ class VetRestController {
 	@PostMapping("/vet")
     public ResponseEntity<VetDto> addVet(@Valid @RequestBody VetDto vetDto) {
 		if (vetDto.getVetId() != null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-			
+		
         Vet vet = vetMapper.toVet(vetDto);
-        vetService.save(vet);
+        vetService.save(vet, vetDto.getSpecialties());
         VetDto savedDto = vetMapper.toVetDto(vet);
         
         return new ResponseEntity<>(savedDto, HttpStatus.CREATED);

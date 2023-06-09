@@ -1,11 +1,15 @@
 package net.guhya.petclinic.module.vet.data;
 
+import java.io.Serializable;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 @Embeddable
-public class VetSpecialtyKey {
+public class VetSpecialtyKey implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	@Column(name = "vet_id")
 	private Integer vetId;
 	

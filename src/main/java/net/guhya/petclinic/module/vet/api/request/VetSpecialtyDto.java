@@ -1,13 +1,13 @@
 package net.guhya.petclinic.module.vet.api.request;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import jakarta.validation.constraints.NotEmpty;
 
-@JsonTypeName("VetSpecialty")
 public class VetSpecialtyDto {
 	
 	private Integer vetId;
+	
+	@NotEmpty
 	private Integer specialtyId;
-	private Integer specialtyName;
 
 	public Integer getVetId() {
 		return vetId;
@@ -25,12 +25,4 @@ public class VetSpecialtyDto {
 		this.specialtyId = specialtyId;
 	}
 
-	public Integer getSpecialtyName() {
-		return specialtyName;
-	}
-
-	public void setSpecialtyName(Integer specialtyName) {
-		this.specialtyName = specialtyName;
-	}	
-		
 }

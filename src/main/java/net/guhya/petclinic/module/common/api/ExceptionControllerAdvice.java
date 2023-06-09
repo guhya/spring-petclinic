@@ -43,6 +43,7 @@ public class ExceptionControllerAdvice {
 	
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> exception(Exception e) {
+    	e.printStackTrace();
         ErrorInfo errorInfo = new ErrorInfo(e);
         return prepareResponse(errorInfo, HttpStatus.BAD_REQUEST);        
     }

@@ -73,7 +73,7 @@ public class Specialty {
 
 	@XmlElement
 	public List<VetSpecialty> getSpecialties() {
-		return Collections.unmodifiableList(getVetSpecialtiesInternal());
+		return getVetSpecialtiesInternal();
 	}
 
 	public int getNrOfVetSpecialties() {

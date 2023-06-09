@@ -15,6 +15,7 @@
  */
 package net.guhya.petclinic.module.vet.service;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import net.guhya.petclinic.module.vet.api.request.VetSpecialtyDto;
+import net.guhya.petclinic.module.vet.data.Specialty;
 import net.guhya.petclinic.module.vet.data.Vet;
+import net.guhya.petclinic.module.vet.data.VetSpecialty;
+import net.guhya.petclinic.module.vet.projection.VetSpecialtyWithNameDto;
 import net.guhya.petclinic.module.vet.projection.VetWithSpecialtiesDto;
 import net.guhya.petclinic.module.vet.repository.VetRepository;
 
@@ -40,22 +45,64 @@ public class VetService {
 	@Transactional(readOnly = true)
 	public List<VetWithSpecialtiesDto> findAllVet(Pageable pageable) throws DataAccessException {
 		List<Integer> vetIdList = vetRepository.findAllVetId(pageable);
-		return vetRepository.findAllVet(vetIdList);
+		List<VetWithSpecialtiesDto> vetList = vetRepository.findAllVet(vetIdList);
+		List<VetSpecialtyWithNameDto> vetSpecialtyList = vetRepository.findAllVetSpecialty(vetIdList);
+		
+		for (VetWithSpecialtiesDto vet : vetList) {
+			Integer vetId = vet.getVetId();
+			for (VetSpecialtyWithNameDto vetSpecialty : vetSpecialtyList) {
+				if (vetSpecialty.getVetId().equals(vetId)) {
+					vet.getSpecialties().add(vetSpecialty);
+				}
+			}
+		}
+		
+		return vetList;
+	}
+
+	@Transactional(readOnly = true)
+	public VetWithSpecialtiesDto findVetWithSpecialtiesByVetId(int vetId) throws DataAccessException {
+		VetWithSpecialtiesDto vetWithSpecialtiesDto = vetRepository.findVetWithSpecialtiesByVetId(vetId);
+		List<VetSpecialtyWithNameDto> vetSpecialtyList = vetRepository.findAllVetSpecialty(Arrays.asList(new Integer[] {vetId}));
+		vetWithSpecialtiesDto.setSpecialties(vetSpecialtyList);
+		
+		return vetWithSpecialtiesDto;
 	}
 
 	@Transactional(readOnly = true)
 	public Vet findByVetId(int vetId) throws DataAccessException {
 		return vetRepository.findByVetId(vetId);
 	}
-
+	
 	@Transactional(readOnly = true)
-	public VetWithSpecialtiesDto findVetWithSpecialtiesByVetId(int vetId) throws DataAccessException {
-		return vetRepository.findVetWithSpecialtiesByVetId(vetId);
+	public Specialty findSpecialtyBySpecialtyId(int specialtyId) throws DataAccessException {
+		return vetRepository.findSpecialtyBySpecialtyId(specialtyId);
 	}
 
 	@Transactional
 	public void save(Vet vet) throws DataAccessException {
-		vetRepository.save(vet);
+    	vetRepository.save(vet);
+	}
+
+	@Transactional
+	public void save(Vet vet, List<VetSpecialtyDto> specialties) throws DataAccessException {
+		vetRepository.saveAndFlush(vet);
+        
+		for (VetSpecialtyDto vetSpecialtyDto : specialties) {
+        	Specialty specialty = vetRepository.findSpecialtyBySpecialtyId(vetSpecialtyDto.getSpecialtyId());
+        	
+        	VetSpecialty vetSpecialty = new VetSpecialty(vet.getVetId(), specialty.getSpecialtyId());
+        	vetSpecialty.setSpecialty(specialty);
+        	vetSpecialty.setVet(vet);
+        	vet.getSpecialties().add(vetSpecialty);
+        	specialty.getSpecialties().add(vetSpecialty);
+        	vetRepository.save(vetSpecialty);
+        }
+	}
+
+	@Transactional
+	public void save(VetSpecialty vetSpecialty) throws DataAccessException {
+		vetRepository.save(vetSpecialty);
 	}
 
 	@Transactional

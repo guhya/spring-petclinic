@@ -24,6 +24,16 @@ public class VetSpecialty {
 	@JoinColumn(name = "specialty_id")
 	Specialty specialty;
 
+	public VetSpecialty() {};
+	
+	public VetSpecialty(Integer vetId, Integer specialtyId) {
+		VetSpecialtyKey key = new VetSpecialtyKey();
+		key.setVetId(vetId);
+		key.setSpecialtyId(specialtyId);
+		
+		this.vetSpecialtyKey = key;
+	}
+
 	public VetSpecialtyKey getVetSpecialtyKey() {
 		return vetSpecialtyKey;
 	}
