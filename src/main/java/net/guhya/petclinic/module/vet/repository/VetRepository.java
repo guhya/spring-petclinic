@@ -18,25 +18,43 @@ package net.guhya.petclinic.module.vet.repository;
 import java.util.List;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import net.guhya.petclinic.module.vet.data.Vet;
+import net.guhya.petclinic.module.vet.projection.VetWithSpecialtiesDto;
 
-/**
- * Repository class for <code>Vet</code> domain objects All method names are compliant
- * with Spring Data naming conventions so this interface can easily be extended for Spring
- * Data. See:
- * https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories.query-methods.query-creation
- */
 public interface VetRepository extends Repository<Vet, Integer> {
 
-	/**
-	 * Retrieve all <code>Vet</code>s from the data store.
-	 * @return a <code>Collection</code> of <code>Vet</code>s
-	 * @throws DataAccessException
-	 */
-	@Transactional(readOnly = true)
-	List<Vet> findAll() throws DataAccessException;
+	final String JPQL_QUERY = ""
+			  + "SELECT new net.guhya.petclinic.module.vet.projection.VetWithSpecialtiesDto("
+			  + "	a.vetId, a.firstName, a.lastName"
+			  + ") "
+			  + "FROM Vet a "
+			  + "	LEFT JOIN a.vetSpecialties b ";
+	
+	final String ORDER_BY = "ORDER BY a.firstName DESC";
+	
+    @Query(nativeQuery = false, 
+    		value = "SELECT a.vetId FROM Vet a " + ORDER_BY)
+    List<Integer> findAllVetId(Pageable pageable) throws DataAccessException;
+    
+    @Query(nativeQuery = false, 
+    		value = JPQL_QUERY
+    			  + "WHERE a.vetId IN :vetIdList "
+    			  + ORDER_BY)
+    List<VetWithSpecialtiesDto> findAllVet(List<Integer> vetIdList) throws DataAccessException;
+
+    @Query(nativeQuery = false, 
+    		value = JPQL_QUERY
+    			  + "WHERE a.vetId = :vetId")
+    VetWithSpecialtiesDto findVetWithSpecialtiesByVetId(int vetId);
+    
+    Vet findByVetId(int vetId);
+
+    void save(Vet vet) throws DataAccessException;
+    
+	void delete(Vet vet) throws DataAccessException;
 
 }

@@ -21,13 +21,13 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
-import net.guhya.petclinic.module.owner.api.dto.PetWithTypeAndOwnerDto;
 import net.guhya.petclinic.module.owner.data.Pet;
+import net.guhya.petclinic.module.owner.projection.PetWithTypeAndOwnerDto;
 
 public interface PetRepository extends Repository<Pet, Integer> {
 
-	final String QUERY = ""
-			  + "SELECT new net.guhya.petclinic.module.owner.api.dto.PetWithTypeAndOwnerDto("
+	final String JPQL_QUERY = ""
+			  + "SELECT new net.guhya.petclinic.module.owner.projection.PetWithTypeAndOwnerDto("
 			  + "	a.petId AS petId, a.name AS name, a.birthDate AS birthDate"
 			  + "	, c.name AS typeName, CONCAT(COALESCE(b.firstName,''), ' ', COALESCE(b.lastName,'')) AS ownerName"
 			  + ") "
@@ -38,22 +38,22 @@ public interface PetRepository extends Repository<Pet, Integer> {
 	final String ORDER_BY_ID = "ORDER BY a.petId DESC";
 	
     @Query(nativeQuery = false,
-    		value = QUERY
+    		value = JPQL_QUERY
     			  + "WHERE b.ownerId = :ownerId AND a.petId = :petId")
     PetWithTypeAndOwnerDto findWithTypeAndOwnerByPetId(int ownerId, int petId) throws DataAccessException;
     
     @Query(nativeQuery = false,
-    		value = QUERY
+    		value = JPQL_QUERY
     			  + ORDER_BY_ID)
     List<PetWithTypeAndOwnerDto> findAllWithTypeAndOwner() throws DataAccessException;
 
     @Query(nativeQuery = false,
-    		value = QUERY
+    		value = JPQL_QUERY
     			  + "WHERE b.ownerId = :ownerId "
     			  + ORDER_BY_ID)
     List<PetWithTypeAndOwnerDto> findAllWithTypeAndOwnerByOwnerId(int ownerId) throws DataAccessException;
 
-    Pet findByPetId(int petId) throws DataAccessException;
+    Pet findByOwnerOwnerIdAndPetId(int ownerId, int petId) throws DataAccessException;
 
     void save(Pet pet) throws DataAccessException;
 

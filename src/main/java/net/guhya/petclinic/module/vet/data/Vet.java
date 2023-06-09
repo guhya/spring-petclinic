@@ -25,15 +25,11 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.xml.bind.annotation.XmlElement;
 
-/**
- * Simple JavaBean domain object representing a veterinarian.
- */
 @Entity
 @Table(name = "vet")
 public class Vet {
@@ -42,6 +38,17 @@ public class Vet {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "vet_id")
 	private Integer vetId;
+	
+	@Column(name = "first_name")
+	@NotEmpty
+	private String firstName;
+
+	@Column(name = "last_name")
+	@NotEmpty
+	private String lastName;
+
+	@OneToMany(mappedBy = "vet", fetch = FetchType.LAZY)
+	private List<VetSpecialty> vetSpecialties;
 
 	public Integer getVetId() {
 		return vetId;
@@ -51,34 +58,44 @@ public class Vet {
 		this.vetId = vetId;
 	}
 
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "vet_specialty", 
-			joinColumns = @JoinColumn(name = "vet_id"),
-			inverseJoinColumns = @JoinColumn(name = "specialty_id"))
-	private List<Specialty> specialties;
-
-	protected List<Specialty> getSpecialtiesInternal() {
-		if (this.specialties == null) {
-			this.specialties = new ArrayList<>();
-		}
-		return this.specialties;
+	public String getFirstName() {
+		return this.firstName;
 	}
 
-	protected void setSpecialtiesInternal(List<Specialty> specialties) {
-		this.specialties = specialties;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return this.lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	protected List<VetSpecialty> getVetSpecialtiesInternal() {
+		if (this.vetSpecialties == null) {
+			this.vetSpecialties = new ArrayList<>();
+		}
+		return this.vetSpecialties;
+	}
+
+	protected void setSpecialtiesInternal(List<VetSpecialty> vetSpecialties) {
+		this.vetSpecialties = vetSpecialties;
 	}
 
 	@XmlElement
-	public List<Specialty> getSpecialties() {
-		return Collections.unmodifiableList(getSpecialtiesInternal());
+	public List<VetSpecialty> getSpecialties() {
+		return Collections.unmodifiableList(getVetSpecialtiesInternal());
 	}
 
-	public int getNrOfSpecialties() {
-		return getSpecialtiesInternal().size();
+	public int getNrOfVetSpecialties() {
+		return getVetSpecialtiesInternal().size();
 	}
 
-	public void addSpecialty(Specialty specialty) {
-		getSpecialtiesInternal().add(specialty);
+	public void addVetSpecialty(VetSpecialty vetSpecialty) {
+		getVetSpecialtiesInternal().add(vetSpecialty);
 	}
 
 }

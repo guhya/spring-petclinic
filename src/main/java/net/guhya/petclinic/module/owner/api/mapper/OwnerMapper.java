@@ -9,7 +9,7 @@ import net.guhya.petclinic.module.owner.data.Owner;
  * Maps Owner & OwnerDto using Mapstruct
  */
 
-@Mapper(uses = PetMapper.class)
+@Mapper
 public interface OwnerMapper {
 
     OwnerDto toOwnerDto(Owner owner);

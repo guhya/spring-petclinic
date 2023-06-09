@@ -23,9 +23,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.guhya.petclinic.module.owner.api.dto.OwnerAuditableDto;
-import net.guhya.petclinic.module.owner.api.dto.OwnerAuditableWithPetsDto;
 import net.guhya.petclinic.module.owner.data.Owner;
+import net.guhya.petclinic.module.owner.projection.OwnerAuditableDto;
+import net.guhya.petclinic.module.owner.projection.OwnerAuditableWithPetsDto;
 import net.guhya.petclinic.module.owner.repository.OwnerRepository;
 
 @Service

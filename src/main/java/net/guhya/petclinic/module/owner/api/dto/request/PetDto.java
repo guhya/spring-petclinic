@@ -5,12 +5,9 @@ import java.time.LocalDate;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
-
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
-@JsonTypeName("Pet")
 public class PetDto {
 
 	@NotEmpty

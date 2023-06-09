@@ -15,14 +15,16 @@
  */
 package net.guhya.petclinic.module.vet.service;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.guhya.petclinic.module.vet.data.Vet;
+import net.guhya.petclinic.module.vet.projection.VetWithSpecialtiesDto;
 import net.guhya.petclinic.module.vet.repository.VetRepository;
 
 @Service
@@ -36,8 +38,29 @@ public class VetService {
     }
 
 	@Transactional(readOnly = true)
-	public Collection<Vet> findAll() throws DataAccessException {
-		return vetRepository.findAll();
+	public List<VetWithSpecialtiesDto> findAllVet(Pageable pageable) throws DataAccessException {
+		List<Integer> vetIdList = vetRepository.findAllVetId(pageable);
+		return vetRepository.findAllVet(vetIdList);
 	}
 
+	@Transactional(readOnly = true)
+	public Vet findByVetId(int vetId) throws DataAccessException {
+		return vetRepository.findByVetId(vetId);
+	}
+
+	@Transactional(readOnly = true)
+	public VetWithSpecialtiesDto findVetWithSpecialtiesByVetId(int vetId) throws DataAccessException {
+		return vetRepository.findVetWithSpecialtiesByVetId(vetId);
+	}
+
+	@Transactional
+	public void save(Vet vet) throws DataAccessException {
+		vetRepository.save(vet);
+	}
+
+	@Transactional
+	public void delete(Vet vet) throws DataAccessException {
+		vetRepository.delete(vet);
+	}
+	
 }

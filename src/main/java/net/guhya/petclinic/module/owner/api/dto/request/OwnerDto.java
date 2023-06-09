@@ -1,10 +1,7 @@
 package net.guhya.petclinic.module.owner.api.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
-
 import jakarta.validation.constraints.NotEmpty;
 
-@JsonTypeName("Owner")
 public class OwnerDto {
 
 	private Integer ownerId;

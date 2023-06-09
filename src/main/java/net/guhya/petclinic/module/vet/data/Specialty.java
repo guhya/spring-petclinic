@@ -15,16 +15,20 @@
  */
 package net.guhya.petclinic.module.vet.data;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.xml.bind.annotation.XmlElement;
 
-/**
- * Models a {@link Vet Vet's} specialty (for example, dentistry).
- */
 @Entity
 @Table(name = "specialty")
 public class Specialty {
@@ -36,6 +40,9 @@ public class Specialty {
 
 	@Column(name = "name")
 	private String name;
+	
+	@OneToMany(mappedBy = "specialty", fetch = FetchType.LAZY)
+	private List<VetSpecialty> vetSpecialties;
 
 	public Integer getSpecialtyId() {
 		return specialtyId;
@@ -52,4 +59,29 @@ public class Specialty {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	protected List<VetSpecialty> getVetSpecialtiesInternal() {
+		if (this.vetSpecialties == null) {
+			this.vetSpecialties = new ArrayList<>();
+		}
+		return this.vetSpecialties;
+	}
+
+	protected void setSpecialtiesInternal(List<VetSpecialty> vetSpecialties) {
+		this.vetSpecialties = vetSpecialties;
+	}
+
+	@XmlElement
+	public List<VetSpecialty> getSpecialties() {
+		return Collections.unmodifiableList(getVetSpecialtiesInternal());
+	}
+
+	public int getNrOfVetSpecialties() {
+		return getVetSpecialtiesInternal().size();
+	}
+
+	public void addVetSpecialty(VetSpecialty vetSpecialty) {
+		getVetSpecialtiesInternal().add(vetSpecialty);
+	}
+	
 }

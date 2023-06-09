@@ -22,8 +22,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.guhya.petclinic.module.owner.api.dto.VisitWithPetDto;
 import net.guhya.petclinic.module.owner.data.Visit;
+import net.guhya.petclinic.module.owner.projection.VisitWithPetDto;
 import net.guhya.petclinic.module.owner.repository.VisitRepository;
 
 @Service

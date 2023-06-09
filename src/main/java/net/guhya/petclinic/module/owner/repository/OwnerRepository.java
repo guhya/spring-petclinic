@@ -22,21 +22,21 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
-import net.guhya.petclinic.module.owner.api.dto.OwnerAuditableDto;
-import net.guhya.petclinic.module.owner.api.dto.OwnerAuditableWithPetsDto;
 import net.guhya.petclinic.module.owner.data.Owner;
+import net.guhya.petclinic.module.owner.projection.OwnerAuditableDto;
+import net.guhya.petclinic.module.owner.projection.OwnerAuditableWithPetsDto;
 
 public interface OwnerRepository extends Repository<Owner, Integer> {
 	
-	final String QUERY = ""
-			  + "SELECT new net.guhya.petclinic.module.owner.api.dto.OwnerAuditableDto("
+	final String JPQL_QUERY = ""
+			  + "SELECT new net.guhya.petclinic.module.owner.projection.OwnerAuditableDto("
 			  + "	a.firstName, a.lastName, a.address, a.city, a.telephone, a.ownerId"
 			  + "	, a.createdBy, a.createdAt, a.modifiedBy, a.modifiedAt "
 			  + ") "
 			  + "FROM Owner a ";
 	
-	final String QUERY_WITH_PETS = ""
-			  + "SELECT new net.guhya.petclinic.module.owner.api.dto.OwnerAuditableWithPetsDto("
+	final String JPQL_QUERY_WITH_PETS = ""
+			  + "SELECT new net.guhya.petclinic.module.owner.projection.OwnerAuditableWithPetsDto("
 			  + "	a.firstName, a.lastName, a.address, a.city, a.telephone, a.ownerId"
 			  + "	, a.createdBy, a.createdAt, a.modifiedBy, a.modifiedAt "
 			  + ") "
@@ -45,23 +45,23 @@ public interface OwnerRepository extends Repository<Owner, Integer> {
 	final String ORDER_BY_ID = "ORDER BY a.ownerId DESC";
 
     @Query(nativeQuery = false,
-    		value = QUERY
+    		value = JPQL_QUERY
     			  + ORDER_BY_ID)
     List<OwnerAuditableDto> findAllOwnerAuditable(Pageable pageable) throws DataAccessException;
 
     @Query(nativeQuery = false,
-    		value = QUERY
+    		value = JPQL_QUERY
     			  + "WHERE a.lastName LIKE %:lastName% "
     			  + ORDER_BY_ID)
 	List<OwnerAuditableDto> findOwnerAuditableByLastName(String lastName, Pageable pageable) throws DataAccessException;
 
     @Query(nativeQuery = false,
-    		value = QUERY
+    		value = JPQL_QUERY
     			  + "WHERE a.ownerId = :ownerId ")
     OwnerAuditableDto findOwnerAuditableByOwnerId(int ownerId) throws DataAccessException;
 
     @Query(nativeQuery = false,
-    		value = QUERY_WITH_PETS
+    		value = JPQL_QUERY_WITH_PETS
     			  + "WHERE a.ownerId = :ownerId ")
     OwnerAuditableWithPetsDto findOwnerAuditableWithPetsByOwnerId(int ownerId) throws DataAccessException;
 	

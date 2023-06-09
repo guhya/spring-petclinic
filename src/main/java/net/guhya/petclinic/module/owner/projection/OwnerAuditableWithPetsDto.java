@@ -1,4 +1,4 @@
-package net.guhya.petclinic.module.owner.api.dto;
+package net.guhya.petclinic.module.owner.projection;
 
 import java.time.LocalDateTime;
 import java.util.List;

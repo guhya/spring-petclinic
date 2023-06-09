@@ -22,8 +22,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.guhya.petclinic.module.owner.api.dto.PetWithTypeAndOwnerDto;
 import net.guhya.petclinic.module.owner.data.Pet;
+import net.guhya.petclinic.module.owner.projection.PetWithTypeAndOwnerDto;
 import net.guhya.petclinic.module.owner.repository.PetRepository;
 
 @Service
@@ -53,8 +53,8 @@ public class PetService {
 	}
 
 	@Transactional(readOnly = true)
-	public Pet findByPetId(int petId) throws DataAccessException {
-		Pet pet = petRepository.findByPetId(petId);
+	public Pet findByOwnerOwnerIdAndPetId(int ownerId, int petId) throws DataAccessException {
+		Pet pet = petRepository.findByOwnerOwnerIdAndPetId(ownerId, petId);
 		return pet;
 	}
 

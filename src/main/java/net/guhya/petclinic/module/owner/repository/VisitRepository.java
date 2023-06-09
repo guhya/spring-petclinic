@@ -21,14 +21,13 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
-import net.guhya.petclinic.module.owner.api.dto.VisitWithPetDto;
-import net.guhya.petclinic.module.owner.data.Pet;
 import net.guhya.petclinic.module.owner.data.Visit;
+import net.guhya.petclinic.module.owner.projection.VisitWithPetDto;
 
 public interface VisitRepository extends Repository<Visit, Integer>{
 
-	final String QUERY = ""
-			  + "SELECT new net.guhya.petclinic.module.owner.api.dto.VisitWithPetDto("
+	final String JPQL_QUERY = ""
+			  + "SELECT new net.guhya.petclinic.module.owner.projection.VisitWithPetDto("
 			  + "	a.visitId AS visitId, b.petId AS petId, b.name AS petName "
 			  + "	, a.date AS date, a.description AS description"
 			  + ") "
@@ -38,7 +37,7 @@ public interface VisitRepository extends Repository<Visit, Integer>{
 	final String ORDER_BY = "ORDER BY a.date DESC";
 
     @Query(nativeQuery = false,
-    		value = QUERY
+    		value = JPQL_QUERY
     			  + "WHERE b.petId = :petId "
     			  + ORDER_BY)
     List<VisitWithPetDto> findAllByPetId(Integer petId);
