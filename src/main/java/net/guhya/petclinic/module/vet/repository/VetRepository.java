@@ -22,7 +22,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
-import net.guhya.petclinic.module.vet.data.Specialty;
 import net.guhya.petclinic.module.vet.data.Vet;
 import net.guhya.petclinic.module.vet.data.VetSpecialty;
 import net.guhya.petclinic.module.vet.projection.VetSpecialtyWithNameDto;
@@ -65,11 +64,6 @@ public interface VetRepository extends Repository<Vet, Integer> {
     List<VetSpecialtyWithNameDto> findAllVetSpecialty(List<Integer> vetIdList) throws DataAccessException;
     
     Vet findByVetId(int vetId) throws DataAccessException;
-
-    @Query(nativeQuery = false, 
-    		value = "SELECT a FROM Specialty a "
-    			  + "WHERE a.specialtyId = :specialtyId")
-    Specialty findSpecialtyBySpecialtyId(int specialtyId) throws DataAccessException;
 
     void save(Vet vet) throws DataAccessException;
 

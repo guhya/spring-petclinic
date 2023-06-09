@@ -1,5 +1,7 @@
 package net.guhya.petclinic.module.vet.data;
 
+import org.springframework.data.domain.Persistable;
+
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -9,7 +11,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "vet_specialty")
-public class VetSpecialty {
+public class VetSpecialty implements Persistable<VetSpecialtyKey>{
 	
 	@EmbeddedId
 	private VetSpecialtyKey vetSpecialtyKey;
@@ -58,4 +60,14 @@ public class VetSpecialty {
 		this.specialty = specialty;
 	}
 		
+	@Override
+	public VetSpecialtyKey getId() {
+		return vetSpecialtyKey;
+	}
+
+	@Override
+	public boolean isNew() {
+		return true;
+	}
+	
 }

@@ -30,16 +30,19 @@ import net.guhya.petclinic.module.vet.data.Vet;
 import net.guhya.petclinic.module.vet.data.VetSpecialty;
 import net.guhya.petclinic.module.vet.projection.VetSpecialtyWithNameDto;
 import net.guhya.petclinic.module.vet.projection.VetWithSpecialtiesDto;
+import net.guhya.petclinic.module.vet.repository.SpecialtyRepository;
 import net.guhya.petclinic.module.vet.repository.VetRepository;
 
 @Service
 public class VetService {
 
     private VetRepository vetRepository;
+    private SpecialtyRepository specialtyRepository;
 
     @Autowired
-    public VetService(VetRepository vetRepository) {
+    public VetService(VetRepository vetRepository, SpecialtyRepository specialtyRepository) {
         this.vetRepository = vetRepository;
+        this.specialtyRepository = specialtyRepository;
     }
 
 	@Transactional(readOnly = true)
@@ -74,11 +77,6 @@ public class VetService {
 		return vetRepository.findByVetId(vetId);
 	}
 	
-	@Transactional(readOnly = true)
-	public Specialty findSpecialtyBySpecialtyId(int specialtyId) throws DataAccessException {
-		return vetRepository.findSpecialtyBySpecialtyId(specialtyId);
-	}
-
 	@Transactional
 	public void save(Vet vet) throws DataAccessException {
     	vetRepository.save(vet);
@@ -86,16 +84,18 @@ public class VetService {
 
 	@Transactional
 	public void save(Vet vet, List<VetSpecialtyDto> specialties) throws DataAccessException {
-		vetRepository.saveAndFlush(vet);
+		vetRepository.save(vet);
         
 		for (VetSpecialtyDto vetSpecialtyDto : specialties) {
-        	Specialty specialty = vetRepository.findSpecialtyBySpecialtyId(vetSpecialtyDto.getSpecialtyId());
+        	Specialty specialty = specialtyRepository.getOne(vetSpecialtyDto.getSpecialtyId());
         	
         	VetSpecialty vetSpecialty = new VetSpecialty(vet.getVetId(), specialty.getSpecialtyId());
+        	
         	vetSpecialty.setSpecialty(specialty);
         	vetSpecialty.setVet(vet);
         	vet.getSpecialties().add(vetSpecialty);
         	specialty.getSpecialties().add(vetSpecialty);
+        	
         	vetRepository.save(vetSpecialty);
         }
 	}
