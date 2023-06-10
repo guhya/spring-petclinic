@@ -23,8 +23,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
 import net.guhya.petclinic.module.vet.data.Vet;
-import net.guhya.petclinic.module.vet.data.VetSpecialty;
-import net.guhya.petclinic.module.vet.projection.VetSpecialtyWithNameDto;
 import net.guhya.petclinic.module.vet.projection.VetWithSpecialtiesDto;
 
 public interface VetRepository extends Repository<Vet, Integer> {
@@ -51,26 +49,13 @@ public interface VetRepository extends Repository<Vet, Integer> {
     		value = JPQL_QUERY
     			  + "WHERE a.vetId = :vetId")
     VetWithSpecialtiesDto findVetWithSpecialtiesByVetId(int vetId) throws DataAccessException;
-    
-    @Query(nativeQuery = false, 
-    		value = ""
-				  + "SELECT new net.guhya.petclinic.module.vet.projection.VetSpecialtyWithNameDto("
-				  + "	a.vetSpecialtyKey.vetId AS vetId, a.vetSpecialtyKey.specialtyId AS specialtyId, b.name AS specialtyName"
-				  + ") "
-				  + "FROM VetSpecialty a "
-				  + "	LEFT JOIN a.specialty b "
-    			  + "WHERE a.vetSpecialtyKey.vetId IN :vetIdList "
-    			  + "ORDER BY a.vetSpecialtyKey.vetId ASC, a.vetSpecialtyKey.specialtyId ASC")
-    List<VetSpecialtyWithNameDto> findAllVetSpecialty(List<Integer> vetIdList) throws DataAccessException;
-    
+        
     Vet findByVetId(int vetId) throws DataAccessException;
 
     void save(Vet vet) throws DataAccessException;
 
 	void saveAndFlush(Vet vet) throws DataAccessException;;
     
-	void save(VetSpecialty vetSpecialty) throws DataAccessException;
-
     void delete(Vet vet) throws DataAccessException;
 
 }

@@ -18,6 +18,7 @@ package net.guhya.petclinic.module.vet.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -46,7 +47,7 @@ public class Vet {
 	@NotEmpty
 	private String lastName;
 
-	@OneToMany(mappedBy = "vet", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "vet", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<VetSpecialty> vetSpecialties;
 
 	public Integer getVetId() {

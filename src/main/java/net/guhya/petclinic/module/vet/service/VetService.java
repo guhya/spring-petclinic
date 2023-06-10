@@ -32,24 +32,27 @@ import net.guhya.petclinic.module.vet.projection.VetSpecialtyWithNameDto;
 import net.guhya.petclinic.module.vet.projection.VetWithSpecialtiesDto;
 import net.guhya.petclinic.module.vet.repository.SpecialtyRepository;
 import net.guhya.petclinic.module.vet.repository.VetRepository;
+import net.guhya.petclinic.module.vet.repository.VetSpecialtyRepository;
 
 @Service
 public class VetService {
 
     private VetRepository vetRepository;
     private SpecialtyRepository specialtyRepository;
+    private VetSpecialtyRepository vetSpecialtyRepository;
 
     @Autowired
-    public VetService(VetRepository vetRepository, SpecialtyRepository specialtyRepository) {
+    public VetService(VetRepository vetRepository, SpecialtyRepository specialtyRepository, VetSpecialtyRepository vetSpecialtyRepository) {
         this.vetRepository = vetRepository;
         this.specialtyRepository = specialtyRepository;
+        this.vetSpecialtyRepository = vetSpecialtyRepository;
     }
 
 	@Transactional(readOnly = true)
 	public List<VetWithSpecialtiesDto> findAllVet(Pageable pageable) throws DataAccessException {
 		List<Integer> vetIdList = vetRepository.findAllVetId(pageable);
 		List<VetWithSpecialtiesDto> vetList = vetRepository.findAllVet(vetIdList);
-		List<VetSpecialtyWithNameDto> vetSpecialtyList = vetRepository.findAllVetSpecialty(vetIdList);
+		List<VetSpecialtyWithNameDto> vetSpecialtyList = vetSpecialtyRepository.findAllVetSpecialty(vetIdList);
 		
 		for (VetWithSpecialtiesDto vet : vetList) {
 			Integer vetId = vet.getVetId();
@@ -66,7 +69,7 @@ public class VetService {
 	@Transactional(readOnly = true)
 	public VetWithSpecialtiesDto findVetWithSpecialtiesByVetId(int vetId) throws DataAccessException {
 		VetWithSpecialtiesDto vetWithSpecialtiesDto = vetRepository.findVetWithSpecialtiesByVetId(vetId);
-		List<VetSpecialtyWithNameDto> vetSpecialtyList = vetRepository.findAllVetSpecialty(Arrays.asList(new Integer[] {vetId}));
+		List<VetSpecialtyWithNameDto> vetSpecialtyList = vetSpecialtyRepository.findAllVetSpecialty(Arrays.asList(new Integer[] {vetId}));
 		vetWithSpecialtiesDto.setSpecialties(vetSpecialtyList);
 		
 		return vetWithSpecialtiesDto;
@@ -96,13 +99,8 @@ public class VetService {
         	vet.getSpecialties().add(vetSpecialty);
         	specialty.getSpecialties().add(vetSpecialty);
         	
-        	vetRepository.save(vetSpecialty);
+        	vetSpecialtyRepository.save(vetSpecialty);
         }
-	}
-
-	@Transactional
-	public void save(VetSpecialty vetSpecialty) throws DataAccessException {
-		vetRepository.save(vetSpecialty);
 	}
 
 	@Transactional
